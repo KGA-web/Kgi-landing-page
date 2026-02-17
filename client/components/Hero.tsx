@@ -3,9 +3,6 @@ import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Phone, Loader, CheckCircle, AlertCircle, ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 // ─────────────────────────────────────────────────────────────────
-//  STEP 1 ── Paste your Google Apps Script Web App URL here
-//  See the setup guide at the bottom of this file
-// ─────────────────────────────────────────────────────────────────
 const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyjho59uS7yLSETGdJZoL-Dr1V1BAbW2UeQcOgP8eIOCap37DDMHXe84_UYT-RTVJ1m/exec';
 
 // ── All original data / constants (unchanged) ────────────────────
@@ -112,8 +109,7 @@ export default function Hero() {
 
   const go = (i) => { setFade(false); setTimeout(() => { setCur(i); setFade(true); }, 350); };
 
-  // ── Tab / form state ───────────────────────────────────────────
-  const [tab, setTab]     = useState('register');
+  // ── Form state ─────────────────────────────────────────────────
   const [done, setDone]   = useState(false);
   const [loading, setLoading] = useState(false);
   const [appId, setAppId] = useState('');
@@ -130,12 +126,6 @@ export default function Hero() {
   const [captcha, setCaptcha]   = useState(() => generateCaptcha());
   const [captchaOk, setCaptchaOk] = useState(false);
   const [submitErr, setSubmitErr] = useState('');
-
-  // ── Login state (unchanged behaviour) ─────────────────────────
-  const [ld, setLd]         = useState({ email: '', password: '' });
-  const [showPwd, setShowPwd] = useState(false);
-  const [loginErr, setLoginErr] = useState('');
-  const [loginLoading, setLoginLoading] = useState(false);
 
   // ── Field helpers ──────────────────────────────────────────────
   const sf = (k, v) => {
@@ -203,23 +193,6 @@ export default function Hero() {
     }
   };
 
-  // ── Login submit (original behaviour kept) ────────────────────
-  const submitLogin = async (e) => {
-    e.preventDefault(); setLoginLoading(true); setLoginErr('');
-    try {
-      const r = await fetch('/api/auth/login', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(ld),
-      });
-      if (r.ok) {
-        const d = await r.json();
-        localStorage.setItem('token', d.token);
-        window.location.href = '/dashboard';
-      } else setLoginErr('Invalid email or password');
-    } catch { setLoginErr('Network error'); }
-    finally { setLoginLoading(false); }
-  };
-
   // ══════════════════════════════════════════════════════════════
   return (
     <div
@@ -273,23 +246,12 @@ export default function Hero() {
             <div className="rounded-2xl overflow-hidden"
               style={{ background: 'rgba(8,8,8,.72)', backdropFilter: 'blur(22px)', border: '1px solid rgba(255,255,255,.12)', boxShadow: '0 28px 64px rgba(0,0,0,.55)' }}>
 
-              {/* Card header (unchanged) */}
+              {/* Card header */}
               <div className="px-5 pt-5 pb-4" style={{ borderBottom: '1px solid rgba(255,255,255,.08)' }}>
                 <span className="text-[10px] font-bold uppercase tracking-widest text-yellow-400">Admissions Open 2025–26</span>
                 <h2 className="text-white font-black text-lg mt-0.5 leading-tight" style={{ fontFamily: "'Playfair Display',serif" }}>
                   Begin Your Journey at KGI
                 </h2>
-              </div>
-
-              {/* Tabs (unchanged) */}
-              <div className="flex px-5 pt-3 gap-1">
-                {['register', 'login'].map(t => (
-                  <button key={t} onClick={() => { setTab(t); setSubmitErr(''); setLoginErr(''); }}
-                    className="px-4 py-1.5 text-[10px] font-black uppercase tracking-wide rounded-full transition-all duration-200"
-                    style={tab === t ? { background: '#B91C1C', color: '#fff' } : { color: 'rgba(255,255,255,.45)' }}>
-                    {t === 'register' ? 'New Student' : 'Existing Login'}
-                  </button>
-                ))}
               </div>
 
               {/* ── Form body ── */}
@@ -319,7 +281,7 @@ export default function Hero() {
                     </a>
                   </div>
 
-                ) : tab === 'register' ? (
+                ) : (
                   /* ══════════════════════════════════════════════
                      REGISTRATION FORM  ── simplified + validated
                      ══════════════════════════════════════════════ */
@@ -481,47 +443,6 @@ export default function Hero() {
                       By registering you agree to our{' '}
                       <a href="#" className="text-yellow-400/60 hover:text-yellow-400">Terms</a> &amp;{' '}
                       <a href="#" className="text-yellow-400/60 hover:text-yellow-400">Privacy Policy</a>
-                    </p>
-                  </form>
-
-                ) : (
-                  /* ── LOGIN tab (unchanged) ── */
-                  <form onSubmit={submitLogin} className="space-y-3 mt-1">
-                    {loginErr && (
-                      <div className="flex items-start gap-2 p-2.5 rounded-lg"
-                        style={{ background: 'rgba(239,68,68,.15)', border: '1px solid rgba(239,68,68,.3)' }}>
-                        <AlertCircle size={12} className="text-red-400 mt-0.5 shrink-0" />
-                        <p className="text-[11px] text-red-300">{loginErr}</p>
-                      </div>
-                    )}
-                    <div>
-                      <label className={L}>Email Address *</label>
-                      <input value={ld.email} onChange={e => setLd(p => ({ ...p, email: e.target.value }))}
-                        type="email" placeholder="your@email.com" required className={I} />
-                    </div>
-                    <div>
-                      <label className={L}>Password *</label>
-                      <div className="relative">
-                        <input value={ld.password} onChange={e => setLd(p => ({ ...p, password: e.target.value }))}
-                          type={showPwd ? 'text' : 'password'} placeholder="Enter password" required className={`${I} pr-9`} />
-                        <button type="button" onClick={() => setShowPwd(p => !p)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70">
-                          {showPwd ? <EyeOff size={13} /> : <Eye size={13} />}
-                        </button>
-                      </div>
-                      <a href="#" className="block text-right text-[10px] text-yellow-400/70 hover:text-yellow-400 mt-1">Forgot password?</a>
-                    </div>
-                    <button type="submit" disabled={loginLoading}
-                      className="w-full py-2.5 rounded-xl text-xs font-black uppercase tracking-wide text-white flex items-center justify-center gap-2 transition hover:opacity-90 disabled:opacity-40"
-                      style={{ background: 'linear-gradient(135deg,#B91C1C,#7F1D1D)' }}>
-                      {loginLoading && <Loader size={14} className="animate-spin" />}
-                      {loginLoading ? 'Signing in...' : 'Sign In'}
-                    </button>
-                    <p className="text-center text-[11px] text-white/40">
-                      New student?{' '}
-                      <button type="button" onClick={() => setTab('register')} className="text-yellow-400 font-bold hover:underline">
-                        Register here
-                      </button>
                     </p>
                   </form>
                 )}

@@ -66,10 +66,7 @@ export default function Index() {
           {/* Vertical divider accent */}
           <div className="hidden lg:block w-px" style={{ background: "linear-gradient(to bottom, transparent, #E5E7EB 20%, #E5E7EB 80%, transparent)" }} />
 
-          {/* RIGHT — Compact Admission Form (40%) */}
-          <div className="flex-1 lg:flex-[1] border-t lg:border-t-0" style={{ maxWidth: "440px", minWidth: "320px" }}>
-            <AdmissionPanel />
-          </div>
+          
         </section>
 
       

@@ -1,8 +1,8 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import AdmissionPanel from "@/components/AdmissionPanel";
-import Features from "@/components/Features";
 import AdmissionGuidelines from "@/components/AdmissionGuidelines";
+import Features from "@/components/Features";
+
 import { ArrowRight, BookOpen, Users, Globe, Stethoscope, GraduationCap } from "lucide-react";
 
 // Google Fonts import via style tag

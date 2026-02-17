@@ -3,7 +3,6 @@ import Hero from "@/components/Hero";
 import Features from "@/components/Features";
 import Footer from "@/components/Footer";
 import MobileFooter from "@/components/MobileFooter";
-
 import { ArrowRight, BookOpen, Globe, Stethoscope, GraduationCap } from "lucide-react";
 
 // Google Fonts import via style tag
@@ -56,24 +55,15 @@ export default function Index() {
         {/* 1 ── Navbar ── */}
         <Navbar />
 
-        {/* 2 ── Hero + Form (combined, full viewport) ── */}
-        <section className="flex flex-col lg:flex-row" style={{ minHeight: "calc(100vh - 80px)" }}>
-          {/* LEFT — Image Slider (60%) */}
-          <div className="flex-1 lg:flex-[1.65] min-h-[420px] lg:min-h-0">
-            <Hero />
-          </div>
-
-          {/* Vertical divider accent */}
-          <div className="hidden lg:block w-px" style={{ background: "linear-gradient(to bottom, transparent, #E5E7EB 20%, #E5E7EB 80%, transparent)" }} />
-
-          
+        {/* 2 ── Hero (full viewport) ── */}
+        <section style={{ minHeight: "calc(100vh - 80px)" }}>
+          <Hero />
         </section>
 
-      
-        {/* 4 ── Features ── */}
+        {/* 3 ── Features ── */}
         <Features />
 
-        {/* 5 ── Institutions Strip ── */}
+        {/* 4 ── Institutions Strip ── */}
         <section className="py-16 px-4 bg-gray-50 border-t border-gray-100">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
@@ -109,12 +99,11 @@ export default function Index() {
           </div>
         </section>
 
-        {/* 6 ── CTA Banner ── */}
+        {/* 5 ── CTA Banner ── */}
         <section className="py-20 px-4 text-white relative overflow-hidden"
           style={{ background: "linear-gradient(135deg, #7F1D1D 0%, #B91C1C 50%, #991B1B 100%)" }}>
           <div className="absolute right-12 top-1/2 -translate-y-1/2 w-72 h-72 rounded-full border border-white/10 pointer-events-none" />
           <div className="absolute right-24 top-1/2 -translate-y-1/2 w-48 h-48 rounded-full border border-white/10 pointer-events-none" />
-
           <div className="max-w-3xl mx-auto text-center relative z-10">
             <span className="text-xs font-bold uppercase tracking-widest text-yellow-300 mb-4 block">Applications Open</span>
             <h2 className="text-4xl md:text-5xl font-black mb-4 leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
@@ -123,7 +112,7 @@ export default function Index() {
             <p className="text-base text-red-100 mb-10 max-w-xl mx-auto">
               Join thousands of students at KGI who are building careers through quality education, global exposure, and innovation.
             </p>
-            <a href="/admission"
+            <a href="/register"
               className="inline-flex items-center gap-3 px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-wide transition-all hover:scale-105 hover:shadow-2xl"
               style={{ background: "#FCD34D", color: "#1F2937" }}>
               Apply Now <ArrowRight size={18} />
@@ -131,7 +120,7 @@ export default function Index() {
           </div>
         </section>
 
-        {/* 7 ── Footer ── */}
+        {/* 6 ── Footer ── */}
         <Footer />
 
         {/* Fixed mobile bottom bar */}

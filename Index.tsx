@@ -1,6 +1,5 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import AdmissionGuidelines from "@/components/AdmissionGuidelines";
 import Features from "@/components/Features";
 import Footer from "@/components/Footer";
 import MobileFooter from "@/components/MobileFooter";
@@ -73,9 +72,7 @@ export default function Index() {
           </div>
         </section>
 
-        {/* 3 ── Admission Guidelines ── */}
-        <AdmissionGuidelines />
-
+      
         {/* 4 ── Features ── */}
         <Features />
 

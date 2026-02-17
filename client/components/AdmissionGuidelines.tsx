@@ -23,20 +23,6 @@ export default function AdmissionGuidelines() {
       description:
         "Admission to the BTech, BSc Nursing, BSc (Hons) Biomedical Science, MBA & MCA Programs will be based on merit in the Nitte University Common Admission Test (NUCAT).",
     },
-    {
-      id: 4,
-      icon: AlertCircle,
-      title: "NUCAT Information",
-      description:
-        "For more information on NUCAT, visit nucat.nitte.edu.in",
-    },
-    {
-      id: 5,
-      icon: CheckCircle,
-      title: "Medical Program Admission",
-      description:
-        "Admission to Medical & Dental Programs will be handled by the Medical Counselling Committee (MCC) based on inter-se merit in the All India Entrance Test - NEET.",
-    },
   ];
 
   return (

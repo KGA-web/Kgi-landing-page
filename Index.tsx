@@ -2,8 +2,10 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import AdmissionGuidelines from "@/components/AdmissionGuidelines";
 import Features from "@/components/Features";
+import Footer from "@/components/Footer";
+import MobileFooter from "@/components/MobileFooter";
 
-import { ArrowRight, BookOpen, Users, Globe, Stethoscope, GraduationCap } from "lucide-react";
+import { ArrowRight, BookOpen, Globe, Stethoscope, GraduationCap } from "lucide-react";
 
 // Google Fonts import via style tag
 const fontStyle = `
@@ -50,14 +52,13 @@ export default function Index() {
   return (
     <>
       <style>{fontStyle}</style>
-      <div className="min-h-screen bg-white flex flex-col">
+      <div className="min-h-screen bg-white flex flex-col pb-16 md:pb-0">
 
-        {/* ── Navbar ── */}
+        {/* 1 ── Navbar ── */}
         <Navbar />
 
-        {/* ── Hero + Form (combined, full viewport) ── */}
+        {/* 2 ── Hero + Form (combined, full viewport) ── */}
         <section className="flex flex-col lg:flex-row" style={{ minHeight: "calc(100vh - 80px)" }}>
-
           {/* LEFT — Image Slider (60%) */}
           <div className="flex-1 lg:flex-[1.65] min-h-[420px] lg:min-h-0">
             <Hero />
@@ -72,7 +73,13 @@ export default function Index() {
           </div>
         </section>
 
-        {/* ── Institutions Strip ── */}
+        {/* 3 ── Admission Guidelines ── */}
+        <AdmissionGuidelines />
+
+        {/* 4 ── Features ── */}
+        <Features />
+
+        {/* 5 ── Institutions Strip ── */}
         <section className="py-16 px-4 bg-gray-50 border-t border-gray-100">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
@@ -89,7 +96,6 @@ export default function Index() {
                     className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100">
                     <div className="h-28 flex items-center justify-center relative overflow-hidden"
                       style={{ background: `linear-gradient(135deg, ${inst.color}, #450a0a)` }}>
-                      {/* Decorative circles */}
                       <div className="absolute -right-4 -top-4 w-20 h-20 rounded-full bg-white/5" />
                       <div className="absolute -left-6 -bottom-6 w-24 h-24 rounded-full bg-white/5" />
                       <Icon size={40} className="text-white relative z-10 group-hover:scale-110 transition-transform duration-300" />
@@ -108,13 +114,10 @@ export default function Index() {
             </div>
           </div>
         </section>
- {/* ── Admission Guidelines ── */}
-        <AdmissionGuidelines />
 
-        {/* ── CTA Banner ── */}
+        {/* 6 ── CTA Banner ── */}
         <section className="py-20 px-4 text-white relative overflow-hidden"
           style={{ background: "linear-gradient(135deg, #7F1D1D 0%, #B91C1C 50%, #991B1B 100%)" }}>
-          {/* Decorative rings */}
           <div className="absolute right-12 top-1/2 -translate-y-1/2 w-72 h-72 rounded-full border border-white/10 pointer-events-none" />
           <div className="absolute right-24 top-1/2 -translate-y-1/2 w-48 h-48 rounded-full border border-white/10 pointer-events-none" />
 
@@ -133,69 +136,12 @@ export default function Index() {
             </a>
           </div>
         </section>
-        
-        {/* ── Features ── */}
-        <Features />
 
-        {/* ── Footer ── */}
-        <footer className="bg-gray-950 text-gray-400 pt-14 pb-8">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+        {/* 7 ── Footer ── */}
+        <Footer />
 
-              {/* Brand */}
-              <div className="md:col-span-1">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 rounded-lg bg-red-700 flex items-center justify-center">
-                    <span className="text-white font-black text-xs">KGI</span>
-                  </div>
-                  <span className="text-white font-bold text-sm">Koshys Group<br /><span className="text-gray-400 font-normal text-xs">of Institutions</span></span>
-                </div>
-                <p className="text-xs leading-relaxed">
-                  A premier educational group committed to excellence in academics, research, and holistic development.
-                </p>
-              </div>
-
-              {/* Quick Links */}
-              <div>
-                <h4 className="text-white text-sm font-bold mb-4 uppercase tracking-wider">Quick Links</h4>
-                <ul className="space-y-2 text-xs">
-                  {["Courses", "Admissions", "Campus Life", "Research", "Contact Us"].map(l => (
-                    <li key={l}><a href="#" className="hover:text-white transition-colors">{l}</a></li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Contact */}
-              <div>
-                <h4 className="text-white text-sm font-bold mb-4 uppercase tracking-wider">Contact</h4>
-                <div className="space-y-2 text-xs">
-                  <p>admissions@kgi.edu.in</p>
-                  <p>+91-XXXX-XXXX-XX</p>
-                  <p className="leading-relaxed">Bangalore, Karnataka<br />India – 560 XXX</p>
-                </div>
-              </div>
-
-              {/* Social */}
-              <div>
-                <h4 className="text-white text-sm font-bold mb-4 uppercase tracking-wider">Follow Us</h4>
-                <div className="flex flex-wrap gap-3">
-                  {["Facebook", "Twitter", "LinkedIn", "Instagram", "YouTube"].map(s => (
-                    <a key={s} href="#" className="text-xs hover:text-white transition-colors border border-gray-700 hover:border-gray-500 px-3 py-1.5 rounded-full">{s}</a>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
-              <p>&copy; 2025 Koshys Group of Institutions (KGI). All rights reserved.</p>
-              <div className="flex gap-5">
-                {["Privacy Policy", "Terms of Service", "Cookie Policy"].map(l => (
-                  <a key={l} href="#" className="hover:text-white transition-colors">{l}</a>
-                ))}
-              </div>
-            </div>
-          </div>
-        </footer>
+        {/* Fixed mobile bottom bar */}
+        <MobileFooter />
 
       </div>
     </>

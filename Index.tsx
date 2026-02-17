@@ -108,11 +108,7 @@ export default function Index() {
             </div>
           </div>
         </section>
-
-        {/* ── Features ── */}
-        <Features />
-
-        {/* ── Admission Guidelines ── */}
+ {/* ── Admission Guidelines ── */}
         <AdmissionGuidelines />
 
         {/* ── CTA Banner ── */}
@@ -137,6 +133,9 @@ export default function Index() {
             </a>
           </div>
         </section>
+        
+        {/* ── Features ── */}
+        <Features />
 
         {/* ── Footer ── */}
         <footer className="bg-gray-950 text-gray-400 pt-14 pb-8">

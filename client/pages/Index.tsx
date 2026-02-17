@@ -1,7 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
-import AdmissionGuidelines from "@/components/AdmissionGuidelines";
 
 export default function Index() {
   return (
@@ -14,9 +13,6 @@ export default function Index() {
 
       {/* Features Section */}
       <Features />
-
-      {/* Admission Guidelines */}
-      <AdmissionGuidelines />
 
       {/* Call to Action Section */}
       <section className="py-16 bg-red-700 text-white">

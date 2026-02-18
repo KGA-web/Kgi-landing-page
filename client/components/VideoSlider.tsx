@@ -1,77 +1,89 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
+import { ChevronLeft, ChevronRight, PlayCircle } from "lucide-react";
+import { cn } from "@/lib/utils"; // Assuming you have the standard Shadcn cn utility
 
-const VIDEOS = [
-  { id: "dQw4w9WgXcQ", title: "Campus Tour" },
-  { id: "aqz-KE-bpKQ", title: "Placement Highlights" },
-  { id: "yPYZpwSpKmA", title: "Student Testimonials" },
+const KGI_VIDEOS = [
+  { id: "dQw4w9WgXcQ", title: "KGI Campus Life" },
+  { id: "aqz-KE-bpKQ", title: "Annual Convocation" },
+  { id: "yPYZpwSpKmA", title: "Industry Visit 2025" },
 ];
 
-export const VideoSlider = () => {
+export const YoutubeSlider = () => {
   const [isPlaying, setIsPlaying] = useState(false);
 
-  // Initialize Embla with Autoplay
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
-    Autoplay({ delay: 4000, stopOnInteraction: false }),
+  // Initialize Embla with Autoplay plugin
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    loop: true,
+    align: "center",
+    skipSnaps: false 
+  }, [
+    Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true })
   ]);
 
-  // Logic to pause slider when video starts
-  const handleVideoPlay = () => {
-    setIsPlaying(true);
-    const autoplay = emblaApi?.plugins()?.autoplay;
-    if (autoplay) autoplay.stop();
-  };
+  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
 
-  const handleVideoPause = () => {
-    setIsPlaying(false);
+  // Pause Autoplay when a video is being interacted with
+  const toggleAutoplay = (play: boolean) => {
     const autoplay = emblaApi?.plugins()?.autoplay;
-    if (autoplay) autoplay.play();
+    if (!autoplay) return;
+    play ? autoplay.play() : autoplay.stop();
+    setIsPlaying(!play);
   };
 
   return (
-    <section className="bg-slate-50 py-20 px-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
-          <div className="text-left">
-            <h2 className="text-4xl font-bold text-[#88171a]">Life at KGI</h2>
-            <p className="text-slate-600 mt-2">Experience our vibrant campus through stories.</p>
+    <section className="w-full bg-white py-20">
+      <div className="container mx-auto px-4">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row items-center justify-between mb-12 border-l-8 border-[#88171a] pl-6">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-black text-[#88171a] uppercase">
+              KGI <span className="text-[#f3af19]">In Motion</span>
+            </h2>
+            <p className="text-slate-600 font-medium">Watch our latest stories and achievements</p>
           </div>
-          {/* Navigation Buttons */}
-          <div className="flex gap-2">
+          
+          <div className="flex gap-4 mt-6 md:mt-0">
             <button 
-              onClick={() => emblaApi?.scrollPrev()}
-              className="p-3 rounded-full border-2 border-[#88171a] text-[#88171a] hover:bg-[#88171a] hover:text-white transition-colors"
+              onClick={scrollPrev}
+              className="h-12 w-12 rounded-full border-2 border-[#88171a] flex items-center justify-center text-[#88171a] hover:bg-[#88171a] hover:text-white transition-all shadow-lg"
             >
-              ←
+              <ChevronLeft size={24} />
             </button>
             <button 
-              onClick={() => emblaApi?.scrollNext()}
-              className="p-3 rounded-full bg-[#88171a] text-white hover:bg-[#6b1214] transition-colors"
+              onClick={scrollNext}
+              className="h-12 w-12 rounded-full bg-[#88171a] flex items-center justify-center text-white hover:bg-[#6b1214] transition-all shadow-lg"
             >
-              →
+              <ChevronRight size={24} />
             </button>
           </div>
         </div>
 
-        {/* Carousel Viewport */}
-        <div className="overflow-hidden rounded-2xl shadow-2xl" ref={emblaRef}>
+        {/* Slider Viewport */}
+        <div className="overflow-hidden cursor-grab active:cursor-grabbing" ref={emblaRef}>
           <div className="flex">
-            {VIDEOS.map((video) => (
-              <div key={video.id} className="flex-[0_0_100%] min-w-0 md:flex-[0_0_80%] lg:flex-[0_0_60%] px-4">
-                <div className="relative aspect-video rounded-xl overflow-hidden bg-black group">
+            {KGI_VIDEOS.map((video) => (
+              <div 
+                key={video.id} 
+                className="flex-[0_0_100%] min-w-0 md:flex-[0_0_70%] lg:flex-[0_0_60%] px-4 transition-opacity duration-500"
+              >
+                <div className="relative group aspect-video rounded-3xl overflow-hidden bg-black shadow-2xl border-4 border-transparent hover:border-[#f3af19] transition-all">
                   <iframe
                     className="w-full h-full"
-                    src={`https://www.youtube.com/embed/${video.id}?enablejsapi=1`}
-                    onPlay={handleVideoPlay}
-                    onPause={handleVideoPause}
+                    src={`https://www.youtube.com/embed/${video.id}?enablejsapi=1&rel=0`}
                     title={video.title}
+                    onMouseEnter={() => toggleAutoplay(false)}
+                    onMouseLeave={() => !isPlaying && toggleAutoplay(true)}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   />
-                  {/* Branding Overlay */}
-                  <div className="absolute top-4 left-4 bg-[#f3af19] text-[#88171a] px-4 py-1 rounded-full text-sm font-bold shadow-md">
-                    Featured Video
+                  
+                  {/* Visual Brand Tag */}
+                  <div className="absolute bottom-6 left-6 flex items-center gap-3 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl shadow-lg transform translate-y-12 group-hover:translate-y-0 transition-transform duration-300">
+                    <PlayCircle className="text-[#88171a]" size={20} />
+                    <span className="font-bold text-[#88171a] text-sm">{video.title}</span>
                   </div>
                 </div>
               </div>
@@ -79,9 +91,17 @@ export const VideoSlider = () => {
           </div>
         </div>
 
-        {/* Progress Dots */}
-        <div className="flex justify-center mt-8 gap-2">
-           <div className={`h-2 w-12 rounded-full transition-all ${isPlaying ? 'bg-[#f3af19] animate-pulse' : 'bg-slate-300'}`} />
+        {/* Progress Indicator */}
+        <div className="flex justify-center mt-10 space-x-2">
+          {KGI_VIDEOS.map((_, i) => (
+            <div 
+              key={i} 
+              className={cn(
+                "h-2 rounded-full transition-all duration-300",
+                isPlaying ? "bg-[#f3af19] w-8" : "bg-slate-200 w-4"
+              )} 
+            />
+          ))}
         </div>
       </div>
     </section>

@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Phone, Loader, CheckCircle, AlertCircle, ArrowRight } from 'lucide-react';
 
 // Assets
-import managementImg from '/public/Management.jepg';
+import managementImg from '/public/Management.png';
 import healthImg from '/public/Health.png';
 import hotelImg from '/public/Hotel.mgmt.png';
 import researchImg from '/public/research.png';

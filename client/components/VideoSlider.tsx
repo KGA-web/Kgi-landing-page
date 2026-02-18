@@ -4,45 +4,50 @@ import Autoplay from "embla-carousel-autoplay";
 import { Play, ChevronLeft, ChevronRight } from "lucide-react";
 
 const VIDEOS = [
-  { id: "M7lc1UVf-VE", title: "Campus Experience 2026", thumb: "https://img.youtube.com/vi/M7lc1UVf-VE/maxresdefault.jpg" },
-  { id: "dQw4w9WgXcQ", title: "Global Placements", thumb: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" },
-  { id: "aqz-KE-bpKQ", title: "Alumni Speak", thumb: "https://img.youtube.com/vi/aqz-KE-bpKQ/maxresdefault.jpg" },
+  { id: "zA30JjKL-qw63wFu", type: "video", title: "A New Era of Academic Excellence Begins | KIMS" }, 
+  { id: "gaJ_yPGH-yt2_i-n", type: "video", title: "Why KIHS?" }, 
+  { id: "sRa-dspXE_RiZP-c", type: "short", title: "KGI Campus" },   
 ];
 
 export const KgiVideoSlider = () => {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
-    Autoplay({ delay: 5000, stopOnInteraction: true, stopOnMouseEnter: true }),
+  // alignment "center" helps smaller items look intentional
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "center" }, [
+    Autoplay({ delay: 4000, stopOnInteraction: true }),
   ]);
 
   const handlePlay = (id: string) => {
     setActiveVideo(id);
-    emblaApi?.plugins().autoplay.stop(); // Brutally kill the slider movement
+    if (emblaApi) emblaApi.plugins().autoplay.stop();
   };
 
   return (
-    <section className="py-24 bg-slate-50">
-      <div className="container">
-        <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
-          <div className="space-y-2">
-            <span className="text-kgi-red font-bold tracking-widest uppercase text-sm">Media Gallery</span>
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 uppercase italic">
+    // py-12 instead of py-24 to reduce section height
+    <section className="py-12 bg-slate-50 overflow-hidden">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <span className="text-kgi-red font-bold tracking-widest uppercase text-[10px]">Gallery</span>
+            <h2 className="text-2xl md:text-3xl font-black text-slate-900 uppercase italic">
               Experience <span className="text-kgi-red">KGI</span>
             </h2>
           </div>
           
-          <div className="flex gap-3">
-            <button onClick={() => emblaApi?.scrollPrev()} className="p-4 rounded-lg bg-white shadow-md hover:text-kgi-red transition-all border border-slate-100"><ChevronLeft /></button>
-            <button onClick={() => emblaApi?.scrollNext()} className="p-4 rounded-lg bg-kgi-red text-white shadow-lg hover:brightness-110 transition-all"><ChevronRight /></button>
+          <div className="flex gap-2">
+            <button onClick={() => emblaApi?.scrollPrev()} className="p-2 rounded-md bg-white shadow hover:text-kgi-red transition-all border border-slate-100"><ChevronLeft size={20}/></button>
+            <button onClick={() => emblaApi?.scrollNext()} className="p-2 rounded-md bg-kgi-red text-white shadow hover:brightness-110 transition-all"><ChevronRight size={20}/></button>
           </div>
         </div>
 
-        <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex">
+        <div className="overflow-visible" ref={emblaRef}>
+          <div className="flex -ml-4">
             {VIDEOS.map((video) => (
-              <div key={video.id} className="flex-[0_0_100%] md:flex-[0_0_85%] lg:flex-[0_0_75%] px-4">
-                <div className="relative aspect-video rounded-2xl overflow-hidden bg-slate-900 shadow-2xl group border-b-8 border-kgi-red">
+              // flex-[0_0_80%] makes the cards smaller so you see the next one peaking in
+              <div key={video.id} className="flex-[0_0_80%] md:flex-[0_0_50%] lg:flex-[0_0_40%] pl-4">
+                <div className={`relative mx-auto rounded-2xl overflow-hidden bg-black shadow-lg border-b-4 border-kgi-red 
+                  ${video.type === 'short' ? 'max-w-[220px] aspect-[9/16]' : 'w-full aspect-video'}`}>
+                  
                   {activeVideo === video.id ? (
                     <iframe
                       src={`https://www.youtube.com/embed/${video.id}?autoplay=1`}
@@ -51,20 +56,17 @@ export const KgiVideoSlider = () => {
                       allowFullScreen
                     />
                   ) : (
-                    <div className="relative w-full h-full">
-                      <img src={video.thumb} alt={video.title} className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                      
-                      {/* Brand Centered Play Button */}
-                      <button 
-                        onClick={() => handlePlay(video.id)}
-                        className="absolute inset-0 m-auto w-20 h-20 bg-kgi-red text-white rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-all z-10"
-                      >
-                        <Play fill="currentColor" size={32} className="ml-1" />
+                    <div className="relative w-full h-full cursor-pointer" onClick={() => handlePlay(video.id)}>
+                      <img 
+                        src={`https://img.youtube.com/vi/${video.id}/mqdefault.jpg`} 
+                        alt={video.title} 
+                        className="w-full h-full object-cover opacity-80" 
+                      />
+                      <button className="absolute inset-0 m-auto w-12 h-12 bg-kgi-red text-white rounded-full flex items-center justify-center shadow-xl group-hover:scale-110 transition-all">
+                        <Play fill="currentColor" size={20} className="ml-0.5" />
                       </button>
-
-                      <div className="absolute bottom-8 left-8">
-                        <h3 className="text-2xl font-bold text-white uppercase tracking-tight">{video.title}</h3>
+                      <div className="absolute bottom-4 left-4">
+                        <h3 className="text-sm font-bold text-white uppercase truncate pr-4">{video.title}</h3>
                       </div>
                     </div>
                   )}

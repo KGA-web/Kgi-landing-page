@@ -1,43 +1,43 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, Phone, Loader, CheckCircle, AlertCircle, ArrowRight, Eye, EyeOff } from 'lucide-react';
-import managementImg from '../public/Management.png';
-import healthImg from '../public/Health.png';
-import hotelImg from '../public/Hotel.mgmt.png';
-import researchImg from '../public/research.png';
+import { ChevronLeft, ChevronRight, Phone, Loader, CheckCircle, AlertCircle, ArrowRight } from 'lucide-react';
 
-// ─────────────────────────────────────────────────────────────────
+// Assets
+import managementImg from '/public/Management.png';
+import healthImg from '/public/Health.png';
+import hotelImg from '/public/Hotel.mgmt.png';
+import researchImg from '/public/research.png';
+
 const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyjho59uS7yLSETGdJZoL-Dr1V1BAbW2UeQcOgP8eIOCap37DDMHXe84_UYT-RTVJ1m/exec';
 
-// ── All original data / constants (unchanged) ────────────────────
 const heroImages = [
-  { id: 1, label: 'Management Studies',    url: managementImg },
-  { id: 2, label: 'Health Sciences',       url: healthImg },
-  { id: 3, label: 'Hotel Management',      url: hotelImg },
+  { id: 1, label: 'Management Studies', url: managementImg },
+  { id: 2, label: 'Health Sciences', url: healthImg },
+  { id: 3, label: 'Hotel Management', url: hotelImg },
   { id: 4, label: 'Research & Innovation', url: researchImg },
 ];
 
-const PROGRAM_LEVELS = ['Undergraduate (UG)','Postgraduate (PG)','Nursing','Allied Health Sciences','Diploma','PhD'];
+const PROGRAM_LEVELS = ['Undergraduate (UG)', 'Postgraduate (PG)', 'Nursing', 'Allied Health Sciences', 'Diploma', 'PhD'];
 const PROGRAMS_BY_LEVEL = {
-  'Undergraduate (UG)':  ['BBA','B.Com','BCA','BSc','B.Sc Forensic Science','BVA - Animation','BVA - Applied Arts','BVA - Interior Design','B.Com Logistics','BCA Advanced'],
-  'Postgraduate (PG)':   ['MBA','MCA','M.Com','MSc'],
-  'Nursing':             ['GNM','B.Sc Nursing','PBBSc','M.Sc Nursing'],
-  'Allied Health Sciences':['B.Sc MLT','B.Sc Radiology','B.Sc Physiotherapy','B.Sc Renal Dialysis','B.Sc Respiratory','B.Sc AT & OT','B.Sc MIT'],
-  'Diploma':             ['Diploma in Management','Diploma in Healthcare','Hotel Management'],
-  'PhD':                 ['PhD in Management','PhD in Science','PhD in Healthcare'],
+  'Undergraduate (UG)': ['BBA', 'B.Com', 'BCA', 'BSc', 'B.Sc Forensic Science', 'BVA - Animation', 'BVA - Applied Arts', 'BVA - Interior Design', 'B.Com Logistics', 'BCA Advanced'],
+  'Postgraduate (PG)': ['MBA', 'MCA', 'M.Com', 'MSc'],
+  'Nursing': ['GNM', 'B.Sc Nursing', 'PBBSc', 'M.Sc Nursing'],
+  'Allied Health Sciences': ['B.Sc MLT', 'B.Sc Radiology', 'B.Sc Physiotherapy', 'B.Sc Renal Dialysis', 'B.Sc Respiratory', 'B.Sc AT & OT', 'B.Sc MIT'],
+  'Diploma': ['Diploma in Management', 'Diploma in Healthcare', 'Hotel Management'],
+  'PhD': ['PhD in Management', 'PhD in Science', 'PhD in Healthcare'],
 };
 
-// ── Particle hook (unchanged) ────────────────────────────────────
+// Particle Hook
 function useParticles(ref) {
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
     const ctx = cv.getContext('2d'); if (!ctx) return;
     const resize = () => { cv.width = cv.offsetWidth; cv.height = cv.offsetHeight; };
     resize(); window.addEventListener('resize', resize);
-    const pts = Array.from({ length: 55 }, () => ({
+    const pts = Array.from({ length: 45 }, () => ({
       x: Math.random() * cv.width, y: Math.random() * cv.height,
-      vx: (Math.random() - .5) * .4, vy: (Math.random() - .5) * .4,
-      r: Math.random() * 1.8 + .5, a: Math.random() * .35 + .1,
+      vx: (Math.random() - .5) * .3, vy: (Math.random() - .5) * .3,
+      r: Math.random() * 1.5 + .5, a: Math.random() * .3 + .1,
     }));
     let raf;
     const draw = () => {
@@ -49,14 +49,6 @@ function useParticles(ref) {
         ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(255,220,170,${p.a})`; ctx.fill();
       }
-      for (let i = 0; i < pts.length; i++)
-        for (let j = i + 1; j < pts.length; j++) {
-          const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y, d = Math.hypot(dx, dy);
-          if (d < 110) {
-            ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y);
-            ctx.strokeStyle = `rgba(255,200,140,${.1 * (1 - d / 110)})`; ctx.lineWidth = .5; ctx.stroke();
-          }
-        }
       raf = requestAnimationFrame(draw);
     };
     draw();
@@ -64,81 +56,31 @@ function useParticles(ref) {
   }, [ref]);
 }
 
-// ── Shared input class names (unchanged) ─────────────────────────
-const I = "w-full px-3 py-2 text-xs rounded-lg border border-white/20 bg-white/10 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-yellow-400/40 focus:border-yellow-400/50 transition backdrop-blur-sm";
-const S = "w-full px-3 py-2 text-xs rounded-lg border border-white/20 bg-black/40 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400/40 focus:border-yellow-400/50 transition backdrop-blur-sm";
+const I = "w-full px-3 py-2 text-xs rounded-lg border border-white/20 bg-white/10 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-yellow-400/40 transition backdrop-blur-sm";
+const S = "w-full px-3 py-2 text-xs rounded-lg border border-white/20 bg-black/60 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400/40 transition";
 const L = "block text-[10px] font-bold text-white/60 mb-1 uppercase tracking-widest";
 
-// ── Simple math CAPTCHA (no API needed) ──────────────────────────
 function generateCaptcha() {
-  const type = Math.floor(Math.random() * 4); // 0=add, 1=subtract, 2=multiply, 3=word
-  
-  if (type === 0) {
-    // Addition
-    const a = Math.floor(Math.random() * 9) + 1;
-    const b = Math.floor(Math.random() * 9) + 1;
-    return { question: `${a} + ${b} = ?`, answer: String(a + b) };
-  }
-  
-  if (type === 1) {
-    // Subtraction (ensure positive result)
-    const a = Math.floor(Math.random() * 10) + 5;
-    const b = Math.floor(Math.random() * 5) + 1;
-    return { question: `${a} - ${b} = ?`, answer: String(a - b) };
-  }
-  
-  if (type === 2) {
-    // Multiplication (small numbers)
-    const a = Math.floor(Math.random() * 6) + 2;
-    const b = Math.floor(Math.random() * 5) + 2;
-    return { question: `${a} × ${b} = ?`, answer: String(a * b) };
-  }
-  
-  // Word problems
-  const wordProblems = [
-    { q: 'How many days in a week?', a: '7' },
-    { q: 'How many months in a year?', a: '12' },
-    { q: 'How many hours in a day?', a: '24' },
-    { q: 'How many minutes in an hour?', a: '60' },
-    { q: 'How many sides does a triangle have?', a: '3' },
-    { q: 'How many wheels on a car?', a: '4' },
-    { q: 'How many fingers on one hand?', a: '5' },
-    { q: 'Ten minus three equals?', a: '7' },
-    { q: 'Five plus four equals?', a: '9' },
-    { q: 'Two times six equals?', a: '12' },
-  ];
-  const picked = wordProblems[Math.floor(Math.random() * wordProblems.length)];
-  return { question: picked.q, answer: picked.a };
+  const a = Math.floor(Math.random() * 9) + 1;
+  const b = Math.floor(Math.random() * 9) + 1;
+  return { question: `${a} + ${b} = ?`, answer: String(a + b) };
 }
 
-// ── Form validation ───────────────────────────────────────────────
-function validateForm(fd) {
-  const errs = {};
-  if (!fd.name.trim() || fd.name.trim().length < 2)
-    errs.name = 'Please enter your full name.';
-  if (!fd.mobile.trim() || !/^[6-9]\d{9}$/.test(fd.mobile.trim()))
-    errs.mobile = 'Enter a valid 10-digit mobile number.';
-  if (!fd.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fd.email.trim()))
-    errs.email = 'Enter a valid email address.';
-  if (!fd.programLevel)
-    errs.programLevel = 'Please select a program level.';
-  if (!fd.program)
-    errs.program = 'Please select a program.';
-  if (!fd.captchaAnswer.trim())
-    errs.captchaAnswer = 'Please answer the security question.';
-  if (!fd.authorization)
-    errs.authorization = 'Please accept the authorization terms.';
-  return errs;
-}
-
-// ════════════════════════════════════════════════════════════════
 export default function Hero() {
-  // ── Slider state (unchanged) ───────────────────────────────────
-  const [cur, setCur]   = useState(0);
+  const [cur, setCur] = useState(0);
   const [fade, setFade] = useState(true);
   const [auto, setAuto] = useState(true);
   const canvasRef = useRef(null);
   useParticles(canvasRef);
+
+  const [done, setDone] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [appId, setAppId] = useState('');
+  const [fd, setFd] = useState({ name: '', mobile: '', email: '', programLevel: '', program: '', captchaAnswer: '', authorization: false });
+  const [errors, setErrors] = useState({});
+  const [progs, setProgs] = useState([]);
+  const [captcha, setCaptcha] = useState(() => generateCaptcha());
+  const [captchaOk, setCaptchaOk] = useState(false);
 
   useEffect(() => {
     if (!auto) return;
@@ -148,479 +90,150 @@ export default function Hero() {
 
   const go = (i) => { setFade(false); setTimeout(() => { setCur(i); setFade(true); }, 350); };
 
-  // ── Form state ─────────────────────────────────────────────────
-  const [done, setDone]   = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [appId, setAppId] = useState('');
-
-  // ── Registration form state ────────────────────────────────────
-  const [fd, setFd] = useState({
-    name: '', mobile: '', email: '', emailOtp: '',
-    programLevel: '', program: '',
-    captchaAnswer: '', authorization: false,
-  });
-  const [errors, setErrors]     = useState({});
-  const [touched, setTouched]   = useState({});
-  const [progs, setProgs]       = useState([]);
-  const [captcha, setCaptcha]   = useState(() => generateCaptcha());
-  const [captchaOk, setCaptchaOk] = useState(false);
-  const [submitErr, setSubmitErr] = useState('');
-  
-  // ── Email OTP state ────────────────────────────────────────────
-  const [emailOtpSent, setEmailOtpSent] = useState(false);
-  const [emailOtpVerified, setEmailOtpVerified] = useState(false);
-  const [sentOtpCode, setSentOtpCode] = useState('');
-
-  // ── Field helpers ──────────────────────────────────────────────
-  const sf = (k, v) => {
-    setFd(p => ({ ...p, [k]: v }));
-    if (touched[k]) {
-      const errs = validateForm({ ...fd, [k]: v });
-      setErrors(p => ({ ...p, [k]: errs[k] }));
-    }
-  };
-  const blur = (k) => {
-    setTouched(p => ({ ...p, [k]: true }));
-    setErrors(p => ({ ...p, [k]: validateForm(fd)[k] }));
+  const validate = () => {
+    const e = {};
+    if (!fd.name) e.name = "Name required";
+    if (!/^[6-9]\d{9}$/.test(fd.mobile)) e.mobile = "Invalid mobile";
+    if (!/^\S+@\S+\.\S+$/.test(fd.email)) e.email = "Invalid email";
+    if (!fd.program) e.program = "Select program";
+    if (!captchaOk) e.captchaAnswer = "Verify CAPTCHA";
+    if (!fd.authorization) e.authorization = "Required";
+    setErrors(e);
+    return Object.keys(e).length === 0;
   };
 
-  const ic = (name) => `${I}${errors[name] ? ' border-red-400/60 bg-red-900/20' : ''}`;
-  const sc = (name) => `${S}${errors[name] ? ' border-red-400/60' : ''}`;
-
-  const FieldErr = ({ name }) => errors[name]
-    ? <p className="mt-1 text-[10px] text-red-400 flex items-center gap-1">
-        <AlertCircle size={9} className="shrink-0" />{errors[name]}
-      </p>
-    : null;
-
-  // ── CAPTCHA verify ─────────────────────────────────────────────
-  const verifyCaptcha = () => {
-    if (fd.captchaAnswer.trim() === captcha.answer) {
-      setCaptchaOk(true);
-      setErrors(p => ({ ...p, captchaAnswer: undefined }));
-    } else {
-      setErrors(p => ({ ...p, captchaAnswer: 'Wrong answer. Try again.' }));
-      setCaptcha(generateCaptcha());
-      sf('captchaAnswer', '');
-    }
-  };
-
-  // ── Email OTP functions ────────────────────────────────────────
-  const sendEmailOtp = async () => {
-    if (!fd.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fd.email.trim())) {
-      setErrors(p => ({ ...p, email: 'Enter a valid email address first.' }));
-      return;
-    }
-    
-    setLoading(true);
-    const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
-    setSentOtpCode(code);
-    
-    try {
-      // Send email via your backend API
-      const response = await fetch('/api/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          to: fd.email.trim(), 
-          code: code,
-          subject: 'KGI Verification Code',
-          text: `Your KGI verification code is: ${code}\n\nThis code will expire in 10 minutes.`
-        })
-      });
-      
-      if (response.ok) {
-        setEmailOtpSent(true);
-        setErrors(p => ({ ...p, email: undefined }));
-      } else {
-        setSubmitErr('Failed to send verification code. Please try again.');
-      }
-    } catch (error) {
-      setSubmitErr('Network error. Please check your connection.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const verifyEmailOtp = () => {
-    if (!fd.emailOtp.trim()) {
-      setErrors(p => ({ ...p, emailOtp: 'Enter the verification code.' }));
-      return;
-    }
-    
-    if (fd.emailOtp.trim() === sentOtpCode) {
-      setEmailOtpVerified(true);
-      setErrors(p => ({ ...p, emailOtp: undefined }));
-    } else {
-      setErrors(p => ({ ...p, emailOtp: 'Invalid code. Please try again.' }));
-    }
-  };
-
-  // ── Submit registration → Google Sheets ───────────────────────
   const submitReg = async (e) => {
     e.preventDefault();
-    const allTouched = Object.keys(fd).reduce((a, k) => ({ ...a, [k]: true }), {});
-    setTouched(allTouched);
-    const errs = validateForm(fd);
-    setErrors(errs);
-    if (Object.keys(errs).length > 0) return;
-    if (!emailOtpVerified) { 
-      setErrors(p => ({ ...p, emailOtp: 'Please verify your email first.' })); 
-      return; 
-    }
-    if (!captchaOk) { 
-      setErrors(p => ({ ...p, captchaAnswer: 'Please verify the CAPTCHA first.' })); 
-      return; 
-    }
-
-    setLoading(true); setSubmitErr('');
+    if (!validate()) return;
+    setLoading(true);
     try {
       const generatedId = 'KGI' + Date.now().toString().slice(-7);
       const body = new FormData();
       body.append('applicationId', generatedId);
-      body.append('timestamp', new Date().toLocaleString('en-IN'));
-      body.append('name', fd.name.trim());
-      body.append('mobile', fd.mobile.trim());
-      body.append('email', fd.email.trim());
-      body.append('programLevel', fd.programLevel);
+      body.append('name', fd.name);
+      body.append('mobile', fd.mobile);
+      body.append('email', fd.email);
       body.append('program', fd.program);
-
       await fetch(GOOGLE_SHEET_URL, { method: 'POST', body });
       setAppId(generatedId);
       setDone(true);
     } catch {
-      setSubmitErr('Network error. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+      setErrors({ form: "Network error. Try again." });
+    } finally { setLoading(false); }
   };
 
-  // ══════════════════════════════════════════════════════════════
   return (
-    <div
-      className="relative w-full overflow-hidden"
-      style={{ minHeight: 'calc(100vh - 72px)' }}
-      onMouseEnter={() => setAuto(false)}
-      onMouseLeave={() => setAuto(true)}
-    >
-      {/* ── Slider BG (unchanged) ── */}
+    <div className="relative w-full overflow-hidden" style={{ minHeight: 'calc(100vh - 72px)' }}>
       {heroImages.map((img, i) => (
-        <div key={img.id} className="absolute inset-0 transition-opacity duration-700" style={{ opacity: i === cur ? 1 : 0 }}>
-          <img src={img.url} alt={img.label} className="w-full h-full object-cover" />
+        <div key={img.id} className="absolute inset-0 transition-opacity duration-1000" style={{ opacity: i === cur ? 1 : 0 }}>
+          <img src={img.url} alt={img.label} className="w-full h-full object-cover scale-105" />
         </div>
       ))}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/88 via-black/62 to-black/45" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+      
+      {/* ── Overlays & Particles ── */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/65 to-black/40" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-10" />
 
-      {/* ── Layout (unchanged) ── */}
       <div className="relative z-20 w-full flex items-center" style={{ minHeight: 'inherit' }}>
-        <div className="w-full max-w-7xl mx-auto px-5 md:px-10 py-10 flex flex-col lg:flex-row items-center gap-10 lg:gap-6">
-
-          {/* LEFT text (unchanged) */}
-          <div className="flex-1 lg:pr-8 transition-opacity duration-400" style={{ opacity: fade ? 1 : 0 }}>
-            <span className="mb-5 inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-[.18em]"
-              style={{ background: 'rgba(220,38,38,.75)', color: '#fff', backdropFilter: 'blur(6px)' }}>
+        <div className="w-full max-w-7xl mx-auto px-5 md:px-10 py-10 flex flex-col lg:flex-row items-center gap-10 lg:gap-12">
+          
+          {/* LEFT CONTENT */}
+          <div className="flex-1 transition-opacity duration-400" style={{ opacity: fade ? 1 : 0 }}>
+            <span className="mb-5 inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest text-white"
+              style={{ background: 'rgba(220,38,38,0.8)', backdropFilter: 'blur(8px)' }}>
               <span className="w-1.5 h-1.5 rounded-full bg-yellow-300 animate-pulse" />
               {heroImages[cur].label}
             </span>
-            <h1 className="text-white font-black leading-[1.08] mb-5"
-              style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(2.1rem,4vw,3.4rem)' }}>
-              Welcome to<br />
-              <span style={{ color: '#FCD34D' }}>Koshys Group</span><br />
-              of Institutions <span className="text-red-400">(KGI)</span>
+            <h1 className="text-white font-black leading-[1.1] mb-5" style={{ fontFamily: "'Playfair Display',serif", fontSize: 'clamp(2.2rem, 5vw, 3.8rem)' }}>
+              Welcome to <span className="text-yellow-400">Koshys Group</span> <br /> of Institutions
             </h1>
-            <p className="text-gray-200 text-sm md:text-base max-w-sm leading-relaxed mb-8">
-              Empowering students with quality education across management, health sciences, hotel management, and school programs.
+            <p className="text-gray-200 text-sm md:text-lg max-w-md leading-relaxed mb-8">
+              Empowering leaders since 2003 through Excellence in Management and Health Sciences.
             </p>
-            <div className="flex gap-6 flex-wrap">
-              {[['5+', 'Institutions'], ['30+', 'Programs'], ['10K+', 'Students']].map(([v, l]) => (
-                <div key={l} style={{ borderLeft: '2px solid rgba(252,211,77,.5)', paddingLeft: 12 }}>
+            <div className="flex gap-8">
+              {[['5+', 'Institutes'], ['30+', 'Programs'], ['10K+', 'Students']].map(([v, l]) => (
+                <div key={l} className="border-l-2 border-yellow-400/50 pl-4">
                   <div className="text-yellow-300 font-black text-2xl" style={{ fontFamily: "'Playfair Display',serif" }}>{v}</div>
-                  <div className="text-gray-400 text-xs uppercase tracking-wider">{l}</div>
+                  <div className="text-gray-400 text-[10px] uppercase tracking-wider font-bold">{l}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* RIGHT form card */}
-          <div className="w-full lg:w-auto lg:flex-shrink-0" style={{ maxWidth: 400, width: '100%' }}>
-            <div className="rounded-2xl overflow-hidden"
-              style={{ background: 'rgba(8,8,8,.72)', backdropFilter: 'blur(22px)', border: '1px solid rgba(255,255,255,.12)', boxShadow: '0 28px 64px rgba(0,0,0,.55)' }}>
-
-              {/* Card header */}
-              <div className="px-5 pt-5 pb-4" style={{ borderBottom: '1px solid rgba(255,255,255,.08)' }}>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-yellow-400">Admissions Open 2025–26</span>
-                <h2 className="text-white font-black text-lg mt-0.5 leading-tight" style={{ fontFamily: "'Playfair Display',serif" }}>
-                  Begin Your Journey at KGI
-                </h2>
-              </div>
-
-              {/* ── Form body ── */}
-              <div className="px-5 py-4 overflow-y-auto" style={{ maxHeight: '72vh' }}>
-
-                {/* ── SUCCESS screen ── */}
+          {/* RIGHT GLASS FORM */}
+          <div className="w-full max-w-[400px]">
+            <div className="rounded-3xl p-1" style={{ 
+              background: 'rgba(15,15,15,0.4)', 
+              backdropFilter: 'blur(24px) saturate(160%)', 
+              border: '1px solid rgba(255,255,255,0.12)', 
+              boxShadow: '0 25px 60px rgba(0,0,0,0.5)' 
+            }}>
+              <div className="p-6">
                 {done ? (
-                  <div className="text-center py-6">
-                    <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3"
-                      style={{ background: 'rgba(34,197,94,.15)' }}>
-                      <CheckCircle size={28} className="text-green-400" />
-                    </div>
-                    <h3 className="text-white font-black text-base mb-1" style={{ fontFamily: "'Playfair Display',serif" }}>
-                      Application Submitted!
-                    </h3>
-                    {appId && (
-                      <div className="inline-block my-2 px-4 py-2 rounded-xl"
-                        style={{ background: 'rgba(255,255,255,.08)', border: '1px solid rgba(255,255,255,.12)' }}>
-                        <p className="text-[10px] text-white/50 mb-1">Application ID</p>
-                        <p className="text-yellow-300 font-black tracking-widest text-sm">{appId}</p>
-                      </div>
-                    )}
-                    <p className="text-[11px] text-white/50 mb-5">Save your ID to track application status.</p>
-                    <a href="/" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white transition hover:opacity-90"
-                      style={{ background: 'linear-gradient(135deg,#B91C1C,#7F1D1D)' }}>
-                      Return Home <ArrowRight size={13} />
-                    </a>
+                  <div className="text-center py-10">
+                    <CheckCircle size={50} className="text-green-400 mx-auto mb-4" />
+                    <h2 className="text-xl text-white font-serif mb-2">Application Received!</h2>
+                    <p className="text-yellow-400 font-mono text-lg">{appId}</p>
+                    <button onClick={() => window.location.reload()} className="text-white/40 text-xs underline mt-6">Register another</button>
                   </div>
-
                 ) : (
-                  /* ══════════════════════════════════════════════
-                     REGISTRATION FORM  ── simplified + validated
-                     ══════════════════════════════════════════════ */
-                  <form onSubmit={submitReg} className="space-y-3" noValidate>
-
-                    {/* Network error */}
-                    {submitErr && (
-                      <div className="flex items-start gap-2 p-2.5 rounded-lg"
-                        style={{ background: 'rgba(239,68,68,.15)', border: '1px solid rgba(239,68,68,.3)' }}>
-                        <AlertCircle size={12} className="text-red-400 mt-0.5 shrink-0" />
-                        <p className="text-[11px] text-red-300">{submitErr}</p>
-                      </div>
-                    )}
-
-                    {/* Full Name */}
+                  <form onSubmit={submitReg} className="space-y-4">
+                    <h2 className="text-white font-serif text-xl">Admissions 2025-26</h2>
+                    
                     <div>
-                      <label className={L}>Applicant Name *</label>
-                      <input
-                        value={fd.name}
-                        onChange={e => sf('name', e.target.value)}
-                        onBlur={() => blur('name')}
-                        type="text" placeholder="Full name (as per 10th marks card)"
-                        className={ic('name')}
-                      />
-                      <FieldErr name="name" />
+                      <label className={L}>Full Name</label>
+                      <input className={I} placeholder="As per marks card" onChange={e => setFd({...fd, name: e.target.value})} />
                     </div>
 
-                    {/* Mobile */}
-                    <div>
-                      <label className={L}><Phone size={9} className="inline mr-1" />Mobile Number *</label>
-                      <input
-                        value={fd.mobile}
-                        onChange={e => sf('mobile', e.target.value)}
-                        onBlur={() => blur('mobile')}
-                        type="tel" maxLength={10} placeholder="10-digit number"
-                        className={ic('mobile')}
-                      />
-                      <FieldErr name="mobile" />
-                    </div>
-
-                    {/* Email + OTP Verification */}
-                    <div>
-                      <label className={L}>Email Address *</label>
-                      <input
-                        value={fd.email}
-                        onChange={e => sf('email', e.target.value)}
-                        onBlur={() => blur('email')}
-                        type="email" placeholder="your@email.com"
-                        className={ic('email')}
-                        disabled={emailOtpVerified}
-                      />
-                      <FieldErr name="email" />
-                    </div>
-
-                    {/* Email OTP Verification Box */}
-                    <div className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,.05)', border: '1px solid rgba(255,255,255,.1)' }}>
-                      {emailOtpVerified ? (
-                        <div className="flex items-center gap-2 text-green-400">
-                          <CheckCircle size={14} /><span className="text-[11px] font-bold">Email verified</span>
-                        </div>
-                      ) : (
-                        <>
-                          <button
-                            type="button"
-                            onClick={sendEmailOtp}
-                            disabled={emailOtpSent || loading || !fd.email.trim()}
-                            className="w-full py-2 rounded-lg text-[11px] font-black uppercase tracking-wide text-white flex items-center justify-center gap-2 transition hover:opacity-90 disabled:opacity-50"
-                            style={{ background: 'linear-gradient(135deg,#B91C1C,#7F1D1D)' }}
-                          >
-                            {loading && !emailOtpSent && <Loader size={12} className="animate-spin" />}
-                            {emailOtpSent ? 'Resend Code' : 'Send Verification Code'}
-                          </button>
-                          {emailOtpSent && (
-                            <div className="mt-2 space-y-2">
-                              <input
-                                value={fd.emailOtp}
-                                onChange={e => sf('emailOtp', e.target.value)}
-                                type="text"
-                                maxLength={6}
-                                placeholder="6-digit code"
-                                className={`${I} text-center tracking-[.5em] font-bold`}
-                              />
-                              <FieldErr name="emailOtp" />
-                              <button
-                                type="button"
-                                onClick={verifyEmailOtp}
-                                disabled={loading}
-                                className="w-full py-2 rounded-lg text-[11px] font-black uppercase tracking-wide text-white flex items-center justify-center gap-2 hover:opacity-90 disabled:opacity-50"
-                                style={{ background: '#15803d' }}
-                              >
-                                {loading && <Loader size={11} className="animate-spin" />} Verify Code
-                              </button>
-                            </div>
-                          )}
-                        </>
-                      )}
-                    </div>
-
-                    {/* Program Level */}
-                    <div>
-                      <label className={L}>Program Level *</label>
-                      <select
-                        value={fd.programLevel}
-                        onChange={e => {
-                          const l = e.target.value;
-                          sf('programLevel', l);
-                          sf('program', '');
-                          setProgs(PROGRAMS_BY_LEVEL[l] || []);
-                        }}
-                        onBlur={() => blur('programLevel')}
-                        className={sc('programLevel')}
-                      >
-                        <option value="">Select level</option>
-                        {PROGRAM_LEVELS.map(l => <option key={l} value={l} style={{ color: '#000' }}>{l}</option>)}
-                      </select>
-                      <FieldErr name="programLevel" />
-                    </div>
-
-                    {/* Program */}
-                    {fd.programLevel && (
+                    <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className={L}>Program *</label>
-                        <select
-                          value={fd.program}
-                          onChange={e => sf('program', e.target.value)}
-                          onBlur={() => blur('program')}
-                          className={sc('program')}
-                        >
-                          <option value="">Select program</option>
-                          {progs.map(p => <option key={p} value={p} style={{ color: '#000' }}>{p}</option>)}
-                        </select>
-                        <FieldErr name="program" />
+                        <label className={L}>Mobile</label>
+                        <input className={I} maxLength={10} onChange={e => setFd({...fd, mobile: e.target.value})} />
                       </div>
-                    )}
-
-                    {/* CAPTCHA */}
-                    <div className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,.05)', border: '1px solid rgba(255,255,255,.1)' }}>
-                      <label className={L}>Security Verification *</label>
-                      {captchaOk ? (
-                        <div className="flex items-center gap-2 text-green-400 mt-1">
-                          <CheckCircle size={13} /><span className="text-[11px] font-bold">Verified ✓</span>
-                        </div>
-                      ) : (
-                        <>
-                          {/* Math question */}
-                          <div className="flex items-center justify-between mb-2 px-3 py-2 rounded-lg"
-                            style={{ background: 'rgba(0,0,0,.3)', border: '1px solid rgba(255,255,255,.1)' }}>
-                            <span className="text-[10px] text-white/50">Solve:</span>
-                            <span className="font-mono text-base font-black text-yellow-300">{captcha.question}</span>
-                            <button type="button" onClick={() => { setCaptcha(generateCaptcha()); sf('captchaAnswer', ''); }}
-                              className="text-white/40 hover:text-white/70 text-[10px]">↺ New</button>
-                          </div>
-                          <div className="flex gap-2">
-                            <input
-                              value={fd.captchaAnswer}
-                              onChange={e => sf('captchaAnswer', e.target.value)}
-                              onBlur={() => blur('captchaAnswer')}
-                              placeholder="Your answer"
-                              className={`${I} flex-1`}
-                            />
-                            <button type="button" onClick={verifyCaptcha}
-                              className="px-3 py-2 rounded-lg text-[11px] font-black text-white hover:opacity-90 whitespace-nowrap"
-                              style={{ background: '#B91C1C' }}>
-                              Verify
-                            </button>
-                          </div>
-                          <FieldErr name="captchaAnswer" />
-                        </>
-                      )}
+                      <div>
+                        <label className={L}>Email</label>
+                        <input className={I} type="email" onChange={e => setFd({...fd, email: e.target.value})} />
+                      </div>
                     </div>
 
-                    {/* Authorization */}
-                    <div className="flex items-start gap-2 p-3 rounded-xl"
-                      style={{ background: 'rgba(59,130,246,.1)', border: `1px solid ${errors.authorization ? 'rgba(239,68,68,.4)' : 'rgba(59,130,246,.2)'}` }}>
-                      <input
-                        type="checkbox" id="auth"
-                        checked={fd.authorization}
-                        onChange={e => sf('authorization', e.target.checked)}
-                        className="mt-0.5 w-3 h-3 accent-red-600 cursor-pointer shrink-0"
-                      />
-                      <label htmlFor="auth" className="text-[10px] text-white/60 leading-relaxed cursor-pointer">
-                        I authorize KGI and its representatives to contact me via email, SMS, WhatsApp and call.
-                        This overrides DND/NDNC. *
-                      </label>
+                    <div>
+                      <label className={L}>Course</label>
+                      <select className={S} onChange={e => setFd({...fd, program: e.target.value})}>
+                        <option value="">Select Program</option>
+                        {Object.values(PROGRAMS_BY_LEVEL).flat().map(p => <option key={p} value={p} className="text-black">{p}</option>)}
+                      </select>
                     </div>
-                    {errors.authorization && (
-                      <p className="text-[10px] text-red-400 flex items-center gap-1 -mt-2">
-                        <AlertCircle size={9} />{errors.authorization}
-                      </p>
-                    )}
 
-                    {/* Submit */}
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="w-full py-2.5 rounded-xl text-xs font-black uppercase tracking-wide text-white flex items-center justify-center gap-2 transition hover:opacity-90 disabled:opacity-40"
-                      style={{ background: 'linear-gradient(135deg,#B91C1C,#7F1D1D)' }}
-                    >
-                      {loading ? <Loader size={14} className="animate-spin" /> : <ArrowRight size={14} />}
-                      {loading ? 'Submitting...' : 'Submit Application'}
+                    {/* CAPTCHA Box */}
+                    <div className="bg-white/5 p-3 rounded-xl border border-white/10">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-[10px] text-white/50">Solve: {captcha.question}</span>
+                        {captchaOk && <CheckCircle size={12} className="text-green-400" />}
+                      </div>
+                      <div className="flex gap-2">
+                        <input className={I} placeholder="Answer" onChange={e => setFd({...fd, captchaAnswer: e.target.value})} />
+                        <button type="button" onClick={() => setCaptchaOk(fd.captchaAnswer === captcha.answer)} className="bg-yellow-500 px-3 rounded-lg text-black text-[10px] font-bold">Verify</button>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-2 pt-2">
+                      <input type="checkbox" className="mt-1 accent-red-600" onChange={e => setFd({...fd, authorization: e.target.checked})} />
+                      <p className="text-[9px] text-white/50 leading-tight">I authorize KGI to contact me via Email/SMS/WhatsApp. This overrides DND.</p>
+                    </div>
+
+                    <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-red-600 to-red-800 py-3 rounded-xl text-white font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:opacity-90 transition-all">
+                      {loading ? <Loader className="animate-spin" size={16} /> : <ArrowRight size={16} />}
+                      Submit Application
                     </button>
-
-                    <p className="text-center text-[10px] text-white/30">
-                      By registering you agree to our{' '}
-                      <a href="#" className="text-yellow-400/60 hover:text-yellow-400">Terms</a> &amp;{' '}
-                      <a href="#" className="text-yellow-400/60 hover:text-yellow-400">Privacy Policy</a>
-                    </p>
+                    {errors.name && <p className="text-center text-red-400 text-[10px]">{errors.name}...</p>}
                   </form>
                 )}
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* ── Slider controls (unchanged) ── */}
-      <button onClick={() => { go((cur - 1 + heroImages.length) % heroImages.length); setAuto(false); }}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-2.5 rounded-full transition hover:scale-110"
-        style={{ background: 'rgba(255,255,255,.12)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,.18)' }}
-        aria-label="Previous"><ChevronLeft size={20} className="text-white" />
-      </button>
-      <button onClick={() => { go((cur + 1) % heroImages.length); setAuto(false); }}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-2.5 rounded-full transition hover:scale-110"
-        style={{ background: 'rgba(255,255,255,.12)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,.18)' }}
-        aria-label="Next"><ChevronRight size={20} className="text-white" />
-      </button>
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 flex gap-2 items-center">
-        {heroImages.map((_, i) => (
-          <button key={i} onClick={() => { go(i); setAuto(false); }}
-            className="rounded-full transition-all duration-300"
-            style={{ width: i === cur ? 28 : 8, height: 8, background: i === cur ? '#FCD34D' : 'rgba(255,255,255,.4)' }}
-            aria-label={`Slide ${i + 1}`} />
-        ))}
-      </div>
-      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/10 z-30">
-        <div className="h-full bg-yellow-400 transition-all duration-300"
-          style={{ width: `${((cur + 1) / heroImages.length) * 100}%` }} />
+        </div>
       </div>
     </div>
   );

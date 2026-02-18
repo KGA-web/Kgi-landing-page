@@ -4,12 +4,12 @@ import Features from "@/components/Features";
 import Footer from "@/components/Footer";
 import MobileFooter from "@/components/MobileFooter";
 import { ArrowRight } from "lucide-react";
-// 1. IMPORT the images at the top
-import kimsLogo from "/kimsb.png";
-import kihsLogo from "/kihs-card.png";
-import kihmLogo from "/kihm_crd.jpg";
 
-// 2. UPDATE your array to use the imported variables
+// 1. DIRECT IMPORTS (This ensures Vite "sees" the files)
+// Note: Ensure these files exist exactly at these paths relative to this file
+import kimsLogo from "../../public/kimsb.png"; 
+import kihsLogo from "../../public/kihs-card.png";
+import kihmLogo from "../../public/kihm_crd.jpg";
 
 const fontStyle = `
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap');
@@ -19,7 +19,7 @@ const fontStyle = `
 const institutions = [
   {
     href: "https://kimsbengaluru.edu.in/",
-    image: kimsLogo, // Using the variable
+    image: kimsLogo, // Reference the imported variable
     name: "Management Studies",
     abbr: "KIMS",
     desc: "World-class business education in BBA, MBA and more",
@@ -27,7 +27,7 @@ const institutions = [
   },
   {
     href: "https://www.kgi.edu.in/KIHS/index.php",
-    image: kihsLogo, // Using the variable
+    image: kihsLogo, 
     name: "Health Sciences",
     abbr: "KIHS",
     desc: "Nursing and allied health science programs for tomorrow's healthcare leaders",
@@ -35,7 +35,7 @@ const institutions = [
   },
   {
     href: "https://kihm.kgi.edu.in/",
-    image: kihmLogo, // Using the variable
+    image: kihmLogo, 
     name: "Hotel Management",
     abbr: "KIHM",
     desc: "Excellence in hospitality training and hotel management education",
@@ -49,14 +49,9 @@ export default function Index() {
       <style>{fontStyle}</style>
       <div className="min-h-screen bg-white flex flex-col pb-16 md:pb-0">
         <Navbar />
-
-        <section style={{ minHeight: "calc(100vh - 80px)" }}>
-          <Hero />
-        </section>
-
+        <section style={{ minHeight: "calc(100vh - 80px)" }}><Hero /></section>
         <Features />
 
-        {/* 4 ── Institutions Strip ── */}
         <section className="py-16 px-4 bg-gray-50 border-t border-gray-100">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
@@ -76,13 +71,14 @@ export default function Index() {
                     <div className="absolute -right-4 -top-4 w-20 h-20 rounded-full bg-white/5" />
                     <div className="absolute -left-6 -bottom-6 w-24 h-24 rounded-full bg-white/5" />
                     
-                    {/* Vite-compatible <img> tag */}
                     <div className="relative z-10 w-32 h-32 transition-all duration-500 group-hover:scale-110">
                       <img 
                         src={inst.image} 
                         alt={inst.name} 
                         className="w-full h-full object-contain p-2"
                         loading="lazy" 
+                        // If the image fails, this error handler will tell us why in the console
+                        onError={(e) => console.error(`Failed to load image: ${inst.image}`)}
                       />
                     </div>
                   </div>
@@ -98,24 +94,6 @@ export default function Index() {
                 </a>
               ))}
             </div>
-          </div>
-        </section>
-
-        <section className="py-20 px-4 text-white relative overflow-hidden"
-          style={{ background: "linear-gradient(135deg, #7F1D1D 0%, #B91C1C 50%, #991B1B 100%)" }}>
-          <div className="max-w-3xl mx-auto text-center relative z-10">
-            <span className="text-xs font-bold uppercase tracking-widest text-yellow-300 mb-4 block">Applications Open</span>
-            <h2 className="text-4xl md:text-5xl font-black mb-4 leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Ready to Shape<br />Your Future?
-            </h2>
-            <p className="text-base text-red-100 mb-10 max-w-xl mx-auto">
-              Join thousands of students at KGI who are building careers through quality education, global exposure, and innovation.
-            </p>
-            <a href="/register"
-              className="inline-flex items-center gap-3 px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-wide transition-all hover:scale-105 hover:shadow-2xl"
-              style={{ background: "#FCD34D", color: "#1F2937" }}>
-              Apply Now <ArrowRight size={18} />
-            </a>
           </div>
         </section>
 

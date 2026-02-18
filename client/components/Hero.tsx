@@ -7,10 +7,10 @@ const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyjho59uS7yLSE
 
 // ── All original data / constants (unchanged) ────────────────────
 const heroImages = [
-  { id:1, label:'Management Studies',    url:'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=1400&h=900&fit=crop' },
-  { id:2, label:'Health Sciences',       url:'https://images.unsplash.com/photo-1576091160550-112173f7f869?w=1400&h=900&fit=crop' },
-  { id:3, label:'Hotel Management',      url:'https://images.unsplash.com/photo-1541339907198-943c28ab91c2?w=1400&h=900&fit=crop' },
-  { id:4, label:'Research & Innovation', url:'https://images.unsplash.com/photo-1533519227268-461353132943?w=1400&h=900&fit=crop' },
+  { id:1, label:'Management Studies',    url:'/Management.png' },
+  { id:2, label:'Health Sciences',       url:'/Health.png' },
+  { id:3, label:'Hotel Management',      url:'/Hotel.mgmt.png' },
+  { id:4, label:'Research & Innovation', url:'/research.png' },
 ];
 
 const PROGRAM_LEVELS = ['Undergraduate (UG)','Postgraduate (PG)','Nursing','Allied Health Sciences','Diploma','PhD'];
@@ -67,9 +67,44 @@ const L = "block text-[10px] font-bold text-white/60 mb-1 uppercase tracking-wid
 
 // ── Simple math CAPTCHA (no API needed) ──────────────────────────
 function generateCaptcha() {
-  const a = Math.floor(Math.random() * 9) + 1;
-  const b = Math.floor(Math.random() * 9) + 1;
-  return { question: `${a} + ${b} = ?`, answer: String(a + b) };
+  const type = Math.floor(Math.random() * 4); // 0=add, 1=subtract, 2=multiply, 3=word
+  
+  if (type === 0) {
+    // Addition
+    const a = Math.floor(Math.random() * 9) + 1;
+    const b = Math.floor(Math.random() * 9) + 1;
+    return { question: `${a} + ${b} = ?`, answer: String(a + b) };
+  }
+  
+  if (type === 1) {
+    // Subtraction (ensure positive result)
+    const a = Math.floor(Math.random() * 10) + 5;
+    const b = Math.floor(Math.random() * 5) + 1;
+    return { question: `${a} - ${b} = ?`, answer: String(a - b) };
+  }
+  
+  if (type === 2) {
+    // Multiplication (small numbers)
+    const a = Math.floor(Math.random() * 6) + 2;
+    const b = Math.floor(Math.random() * 5) + 2;
+    return { question: `${a} × ${b} = ?`, answer: String(a * b) };
+  }
+  
+  // Word problems
+  const wordProblems = [
+    { q: 'How many days in a week?', a: '7' },
+    { q: 'How many months in a year?', a: '12' },
+    { q: 'How many hours in a day?', a: '24' },
+    { q: 'How many minutes in an hour?', a: '60' },
+    { q: 'How many sides does a triangle have?', a: '3' },
+    { q: 'How many wheels on a car?', a: '4' },
+    { q: 'How many fingers on one hand?', a: '5' },
+    { q: 'Ten minus three equals?', a: '7' },
+    { q: 'Five plus four equals?', a: '9' },
+    { q: 'Two times six equals?', a: '12' },
+  ];
+  const picked = wordProblems[Math.floor(Math.random() * wordProblems.length)];
+  return { question: picked.q, answer: picked.a };
 }
 
 // ── Form validation ───────────────────────────────────────────────
@@ -100,13 +135,13 @@ export default function Hero() {
   const [auto, setAuto] = useState(true);
   const canvasRef = useRef(null);
   useParticles(canvasRef);
-  
+
   useEffect(() => {
     if (!auto) return;
     const t = setInterval(() => go((cur + 1) % heroImages.length), 5000);
     return () => clearInterval(t);
   }, [auto, cur]);
-  
+
   const go = (i) => { setFade(false); setTimeout(() => { setCur(i); setFade(true); }, 350); };
 
   // ── Form state ─────────────────────────────────────────────────
@@ -116,17 +151,21 @@ export default function Hero() {
 
   // ── Registration form state ────────────────────────────────────
   const [fd, setFd] = useState({
-    name: '', mobile: '', email: '',
+    name: '', mobile: '', email: '', emailOtp: '',
     programLevel: '', program: '',
     captchaAnswer: '', authorization: false,
   });
-  
   const [errors, setErrors]     = useState({});
   const [touched, setTouched]   = useState({});
   const [progs, setProgs]       = useState([]);
   const [captcha, setCaptcha]   = useState(() => generateCaptcha());
   const [captchaOk, setCaptchaOk] = useState(false);
   const [submitErr, setSubmitErr] = useState('');
+  
+  // ── Email OTP state ────────────────────────────────────────────
+  const [emailOtpSent, setEmailOtpSent] = useState(false);
+  const [emailOtpVerified, setEmailOtpVerified] = useState(false);
+  const [sentOtpCode, setSentOtpCode] = useState('');
 
   // ── Field helpers ──────────────────────────────────────────────
   const sf = (k, v) => {
@@ -136,15 +175,14 @@ export default function Hero() {
       setErrors(p => ({ ...p, [k]: errs[k] }));
     }
   };
-  
   const blur = (k) => {
     setTouched(p => ({ ...p, [k]: true }));
     setErrors(p => ({ ...p, [k]: validateForm(fd)[k] }));
   };
-  
+
   const ic = (name) => `${I}${errors[name] ? ' border-red-400/60 bg-red-900/20' : ''}`;
   const sc = (name) => `${S}${errors[name] ? ' border-red-400/60' : ''}`;
-  
+
   const FieldErr = ({ name }) => errors[name]
     ? <p className="mt-1 text-[10px] text-red-400 flex items-center gap-1">
         <AlertCircle size={9} className="shrink-0" />{errors[name]}
@@ -163,6 +201,57 @@ export default function Hero() {
     }
   };
 
+  // ── Email OTP functions ────────────────────────────────────────
+  const sendEmailOtp = async () => {
+    if (!fd.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fd.email.trim())) {
+      setErrors(p => ({ ...p, email: 'Enter a valid email address first.' }));
+      return;
+    }
+    
+    setLoading(true);
+    const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
+    setSentOtpCode(code);
+    
+    try {
+      // Send email via your backend API
+      const response = await fetch('/api/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          to: fd.email.trim(), 
+          code: code,
+          subject: 'KGI Verification Code',
+          text: `Your KGI verification code is: ${code}\n\nThis code will expire in 10 minutes.`
+        })
+      });
+      
+      if (response.ok) {
+        setEmailOtpSent(true);
+        setErrors(p => ({ ...p, email: undefined }));
+      } else {
+        setSubmitErr('Failed to send verification code. Please try again.');
+      }
+    } catch (error) {
+      setSubmitErr('Network error. Please check your connection.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const verifyEmailOtp = () => {
+    if (!fd.emailOtp.trim()) {
+      setErrors(p => ({ ...p, emailOtp: 'Enter the verification code.' }));
+      return;
+    }
+    
+    if (fd.emailOtp.trim() === sentOtpCode) {
+      setEmailOtpVerified(true);
+      setErrors(p => ({ ...p, emailOtp: undefined }));
+    } else {
+      setErrors(p => ({ ...p, emailOtp: 'Invalid code. Please try again.' }));
+    }
+  };
+
   // ── Submit registration → Google Sheets ───────────────────────
   const submitReg = async (e) => {
     e.preventDefault();
@@ -170,33 +259,36 @@ export default function Hero() {
     setTouched(allTouched);
     const errs = validateForm(fd);
     setErrors(errs);
-    
     if (Object.keys(errs).length > 0) return;
-    if (!captchaOk) { setErrors(p => ({ ...p, captchaAnswer: 'Please verify the CAPTCHA first.' })); return; }
-    
+    if (!emailOtpVerified) { 
+      setErrors(p => ({ ...p, emailOtp: 'Please verify your email first.' })); 
+      return; 
+    }
+    if (!captchaOk) { 
+      setErrors(p => ({ ...p, captchaAnswer: 'Please verify the CAPTCHA first.' })); 
+      return; 
+    }
+
     setLoading(true); setSubmitErr('');
-try {
-  const generatedId = 'KGI' + Date.now().toString().slice(-7);
-  const params = new URLSearchParams({
-    applicationId: generatedId,
-    timestamp: new Date().toLocaleString('en-IN'),
-    name: fd.name.trim(),
-    mobile: fd.mobile.trim(),
-    email: fd.email.trim(),
-    programLevel: fd.programLevel,
-    program: fd.program,
-  });
-  await fetch(`${GOOGLE_SHEET_URL}?${params.toString()}`, {
-    method: 'GET',
-    mode: 'no-cors',
-  });
-  setAppId(generatedId);
-  setDone(true);
-} catch {
-  setSubmitErr('Network error. Please try again.');
-} finally {
-  setLoading(false);
-}
+    try {
+      const generatedId = 'KGI' + Date.now().toString().slice(-7);
+      const body = new FormData();
+      body.append('applicationId', generatedId);
+      body.append('timestamp', new Date().toLocaleString('en-IN'));
+      body.append('name', fd.name.trim());
+      body.append('mobile', fd.mobile.trim());
+      body.append('email', fd.email.trim());
+      body.append('programLevel', fd.programLevel);
+      body.append('program', fd.program);
+
+      await fetch(GOOGLE_SHEET_URL, { method: 'POST', body });
+      setAppId(generatedId);
+      setDone(true);
+    } catch {
+      setSubmitErr('Network error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // ══════════════════════════════════════════════════════════════
@@ -207,24 +299,21 @@ try {
       onMouseEnter={() => setAuto(false)}
       onMouseLeave={() => setAuto(true)}
     >
-      {/* ── Slider BG ── */}
+      {/* ── Slider BG (unchanged) ── */}
       {heroImages.map((img, i) => (
         <div key={img.id} className="absolute inset-0 transition-opacity duration-700" style={{ opacity: i === cur ? 1 : 0 }}>
           <img src={img.url} alt={img.label} className="w-full h-full object-cover" />
         </div>
       ))}
-      
-      {/* ✨ DARKER OVERLAYS — increased opacity values ✨ */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/92 via-black/75 to-black/60" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-      
+      <div className="absolute inset-0 bg-gradient-to-r from-black/88 via-black/62 to-black/45" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-10" />
 
-      {/* ── Layout ── */}
+      {/* ── Layout (unchanged) ── */}
       <div className="relative z-20 w-full flex items-center" style={{ minHeight: 'inherit' }}>
         <div className="w-full max-w-7xl mx-auto px-5 md:px-10 py-10 flex flex-col lg:flex-row items-center gap-10 lg:gap-6">
 
-          {/* LEFT text */}
+          {/* LEFT text (unchanged) */}
           <div className="flex-1 lg:pr-8 transition-opacity duration-400" style={{ opacity: fade ? 1 : 0 }}>
             <span className="mb-5 inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-[.18em]"
               style={{ background: 'rgba(220,38,38,.75)', color: '#fff', backdropFilter: 'blur(6px)' }}>
@@ -254,7 +343,7 @@ try {
           <div className="w-full lg:w-auto lg:flex-shrink-0" style={{ maxWidth: 400, width: '100%' }}>
             <div className="rounded-2xl overflow-hidden"
               style={{ background: 'rgba(8,8,8,.72)', backdropFilter: 'blur(22px)', border: '1px solid rgba(255,255,255,.12)', boxShadow: '0 28px 64px rgba(0,0,0,.55)' }}>
-              
+
               {/* Card header */}
               <div className="px-5 pt-5 pb-4" style={{ borderBottom: '1px solid rgba(255,255,255,.08)' }}>
                 <span className="text-[10px] font-bold uppercase tracking-widest text-yellow-400">Admissions Open 2025–26</span>
@@ -265,7 +354,7 @@ try {
 
               {/* ── Form body ── */}
               <div className="px-5 py-4 overflow-y-auto" style={{ maxHeight: '72vh' }}>
-                
+
                 {/* ── SUCCESS screen ── */}
                 {done ? (
                   <div className="text-center py-6">
@@ -289,12 +378,13 @@ try {
                       Return Home <ArrowRight size={13} />
                     </a>
                   </div>
+
                 ) : (
                   /* ══════════════════════════════════════════════
-                     REGISTRATION FORM
+                     REGISTRATION FORM  ── simplified + validated
                      ══════════════════════════════════════════════ */
                   <form onSubmit={submitReg} className="space-y-3" noValidate>
-                    
+
                     {/* Network error */}
                     {submitErr && (
                       <div className="flex items-start gap-2 p-2.5 rounded-lg"
@@ -330,7 +420,7 @@ try {
                       <FieldErr name="mobile" />
                     </div>
 
-                    {/* Email */}
+                    {/* Email + OTP Verification */}
                     <div>
                       <label className={L}>Email Address *</label>
                       <input
@@ -339,8 +429,53 @@ try {
                         onBlur={() => blur('email')}
                         type="email" placeholder="your@email.com"
                         className={ic('email')}
+                        disabled={emailOtpVerified}
                       />
                       <FieldErr name="email" />
+                    </div>
+
+                    {/* Email OTP Verification Box */}
+                    <div className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,.05)', border: '1px solid rgba(255,255,255,.1)' }}>
+                      {emailOtpVerified ? (
+                        <div className="flex items-center gap-2 text-green-400">
+                          <CheckCircle size={14} /><span className="text-[11px] font-bold">Email verified</span>
+                        </div>
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            onClick={sendEmailOtp}
+                            disabled={emailOtpSent || loading || !fd.email.trim()}
+                            className="w-full py-2 rounded-lg text-[11px] font-black uppercase tracking-wide text-white flex items-center justify-center gap-2 transition hover:opacity-90 disabled:opacity-50"
+                            style={{ background: 'linear-gradient(135deg,#B91C1C,#7F1D1D)' }}
+                          >
+                            {loading && !emailOtpSent && <Loader size={12} className="animate-spin" />}
+                            {emailOtpSent ? 'Resend Code' : 'Send Verification Code'}
+                          </button>
+                          {emailOtpSent && (
+                            <div className="mt-2 space-y-2">
+                              <input
+                                value={fd.emailOtp}
+                                onChange={e => sf('emailOtp', e.target.value)}
+                                type="text"
+                                maxLength={6}
+                                placeholder="6-digit code"
+                                className={`${I} text-center tracking-[.5em] font-bold`}
+                              />
+                              <FieldErr name="emailOtp" />
+                              <button
+                                type="button"
+                                onClick={verifyEmailOtp}
+                                disabled={loading}
+                                className="w-full py-2 rounded-lg text-[11px] font-black uppercase tracking-wide text-white flex items-center justify-center gap-2 hover:opacity-90 disabled:opacity-50"
+                                style={{ background: '#15803d' }}
+                              >
+                                {loading && <Loader size={11} className="animate-spin" />} Verify Code
+                              </button>
+                            </div>
+                          )}
+                        </>
+                      )}
                     </div>
 
                     {/* Program Level */}
@@ -389,6 +524,7 @@ try {
                         </div>
                       ) : (
                         <>
+                          {/* Math question */}
                           <div className="flex items-center justify-between mb-2 px-3 py-2 rounded-lg"
                             style={{ background: 'rgba(0,0,0,.3)', border: '1px solid rgba(255,255,255,.1)' }}>
                             <span className="text-[10px] text-white/50">Solve:</span>
@@ -456,11 +592,10 @@ try {
               </div>
             </div>
           </div>
-
         </div>
       </div>
 
-      {/* ── Slider controls ── */}
+      {/* ── Slider controls (unchanged) ── */}
       <button onClick={() => { go((cur - 1 + heroImages.length) % heroImages.length); setAuto(false); }}
         className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-2.5 rounded-full transition hover:scale-110"
         style={{ background: 'rgba(255,255,255,.12)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,.18)' }}
@@ -471,7 +606,6 @@ try {
         style={{ background: 'rgba(255,255,255,.12)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,.18)' }}
         aria-label="Next"><ChevronRight size={20} className="text-white" />
       </button>
-      
       <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 flex gap-2 items-center">
         {heroImages.map((_, i) => (
           <button key={i} onClick={() => { go(i); setAuto(false); }}
@@ -480,7 +614,6 @@ try {
             aria-label={`Slide ${i + 1}`} />
         ))}
       </div>
-      
       <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/10 z-30">
         <div className="h-full bg-yellow-400 transition-all duration-300"
           style={{ width: `${((cur + 1) / heroImages.length) * 100}%` }} />

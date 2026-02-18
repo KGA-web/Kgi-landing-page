@@ -3,9 +3,9 @@ import Hero from "@/components/Hero";
 import Features from "@/components/Features";
 import Footer from "@/components/Footer";
 import MobileFooter from "@/components/MobileFooter";
-import { ArrowRight, BookOpen, Globe, Stethoscope, GraduationCap } from "lucide-react";
+import Image from "/public"; // Added for optimized images
+import { ArrowRight } from "lucide-react";
 
-// Google Fonts import via style tag
 const fontStyle = `
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap');
   * { font-family: 'DM Sans', sans-serif; }
@@ -14,7 +14,7 @@ const fontStyle = `
 const institutions = [
   {
     href: "https://kimsbengaluru.edu.in/",
-    icon: GraduationCap,
+    image: "/kimsb.png", // Path from your request
     name: "Management Studies",
     abbr: "KIMS",
     desc: "World-class business education in BBA, MBA and more",
@@ -22,7 +22,7 @@ const institutions = [
   },
   {
     href: "https://www.kgi.edu.in/KIHS/index.php",
-    icon: Stethoscope,
+    image: "/kihs-card.png", // Path from your request
     name: "Health Sciences",
     abbr: "KIHS",
     desc: "Nursing and allied health science programs for tomorrow's healthcare leaders",
@@ -30,19 +30,11 @@ const institutions = [
   },
   {
     href: "https://kihm.kgi.edu.in/",
-    icon: Globe,
+    image: "/kihm_crd.jpg", // Path from your request
     name: "Hotel Management",
     abbr: "KIHM",
     desc: "Excellence in hospitality training and hotel management education",
     color: "#7F1D1D",
-  },
-  {
-    href: "https://kgischool.edu.in/",
-    icon: BookOpen,
-    name: "School (CBSE)",
-    abbr: "KGI School",
-    desc: "Quality school education with modern pedagogy and holistic development",
-    color: "#B91C1C",
   },
 ];
 
@@ -51,16 +43,12 @@ export default function Index() {
     <>
       <style>{fontStyle}</style>
       <div className="min-h-screen bg-white flex flex-col pb-16 md:pb-0">
-
-        {/* 1 ── Navbar ── */}
         <Navbar />
 
-        {/* 2 ── Hero (full viewport) ── */}
         <section style={{ minHeight: "calc(100vh - 80px)" }}>
           <Hero />
         </section>
 
-        {/* 3 ── Features ── */}
         <Features />
 
         {/* 4 ── Institutions Strip ── */}
@@ -72,34 +60,43 @@ export default function Index() {
                 Institutions Under KGI
               </h2>
             </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {institutions.map((inst) => {
-                const Icon = inst.icon;
-                return (
-                  <a key={inst.abbr} href={inst.href}
-                    className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100">
-                    <div className="h-28 flex items-center justify-center relative overflow-hidden"
-                      style={{ background: `linear-gradient(135deg, ${inst.color}, #450a0a)` }}>
-                      <div className="absolute -right-4 -top-4 w-20 h-20 rounded-full bg-white/5" />
-                      <div className="absolute -left-6 -bottom-6 w-24 h-24 rounded-full bg-white/5" />
-                      <Icon size={40} className="text-white relative z-10 group-hover:scale-110 transition-transform duration-300" />
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"> {/* Changed to cols-3 as you have 3 items */}
+              {institutions.map((inst) => (
+                <a key={inst.abbr} href={inst.href}
+                  className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100">
+                  <div className="h-32 flex items-center justify-center relative overflow-hidden"
+                    style={{ background: `linear-gradient(135deg, ${inst.color}, #450a0a)` }}>
+                    
+                    {/* Background Decorative Orbs */}
+                    <div className="absolute -right-4 -top-4 w-20 h-20 rounded-full bg-white/5" />
+                    <div className="absolute -left-6 -bottom-6 w-24 h-24 rounded-full bg-white/5" />
+                    
+                    {/* Image Implementation with Animation */}
+                    <div className="relative z-10 w-24 h-24 transition-all duration-500 group-hover:scale-110 group-hover:brightness-110">
+                      <Image 
+                        src={inst.image} 
+                        alt={inst.name} 
+                        fill 
+                        className="object-contain p-2"
+                        sizes="(max-width: 768px) 100vw, 25vw"
+                      />
                     </div>
-                    <div className="p-5">
-                      <span className="text-xs font-bold text-red-600 uppercase tracking-wider">{inst.abbr}</span>
-                      <h3 className="text-sm font-bold text-gray-900 mt-0.5 mb-2">{inst.name}</h3>
-                      <p className="text-xs text-gray-500 leading-relaxed mb-4">{inst.desc}</p>
-                      <span className="flex items-center gap-1 text-xs font-bold text-red-700 group-hover:gap-2 transition-all">
-                        Explore <ArrowRight size={12} />
-                      </span>
-                    </div>
-                  </a>
-                );
-              })}
+                  </div>
+                  
+                  <div className="p-5">
+                    <span className="text-xs font-bold text-red-600 uppercase tracking-wider">{inst.abbr}</span>
+                    <h3 className="text-sm font-bold text-gray-900 mt-0.5 mb-2">{inst.name}</h3>
+                    <p className="text-xs text-gray-500 leading-relaxed mb-4">{inst.desc}</p>
+                    <span className="flex items-center gap-1 text-xs font-bold text-red-700 group-hover:gap-2 transition-all">
+                      Explore <ArrowRight size={12} />
+                    </span>
+                  </div>
+                </a>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* 5 ── CTA Banner ── */}
         <section className="py-20 px-4 text-white relative overflow-hidden"
           style={{ background: "linear-gradient(135deg, #7F1D1D 0%, #B91C1C 50%, #991B1B 100%)" }}>
           <div className="absolute right-12 top-1/2 -translate-y-1/2 w-72 h-72 rounded-full border border-white/10 pointer-events-none" />
@@ -120,12 +117,8 @@ export default function Index() {
           </div>
         </section>
 
-        {/* 6 ── Footer ── */}
         <Footer />
-
-        {/* Fixed mobile bottom bar */}
         <MobileFooter />
-
       </div>
     </>
   );

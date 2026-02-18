@@ -4,15 +4,13 @@ import { Globe, Users, Microscope, Club, Heart, Users2, Activity, Leaf, Music, L
 
 const features = [
   { id: 1, icon: Globe, title: "Global Academic Tie-ups", description: "Student exchange programs with world-class international institutions", num: "01" },
-  { id: 2, icon: Users, title: "80,000+ Alumni", description: "A global alumni network making a positive impact across industries", num: "02" },
-  { id: 3, icon: Microscope, title: "Research Centers", description: "Dedicated research centres for experiential and applied learning", num: "03" },
-  { id: 4, icon: Club, title: "Student Clubs", description: "Diverse student clubs spanning every passion and interest", num: "04" },
-  { id: 5, icon: Heart, title: "Diversity & Inclusion", description: "Unwavering commitment to diversity, equity and inclusivity", num: "05" },
-  { id: 6, icon: Users2, title: "Faculty Excellence", description: "5,500+ faculty members offering world-class mentorship", num: "06" },
-  { id: 7, icon: Activity, title: "Hospital Training", description: "1000-bed NABH-accredited hospital for hands-on clinical exposure", num: "07" },
-{ id: 8, icon: Award, title: "Sports Facilities", description: "Strong emphasis on sports with indoor complexes, 400m athletic turf track and grounds for football, hockey and cricket", num: "08" },
-{ id: 9, icon: Lightbulb, title: "Student Research Fund", description: "Student research supported by the KGI Student Research Fund and Atal Incubation Centre", num: "09" },
-{ id: 10, icon: Leaf, title: "Sustainable Campus", description: "Eco-friendly campuses with rainwater harvesting, solar energy harnessing, and a welcoming environment for migratory birds", num: "10" },
+  { id: 2, icon: Microscope, title: "Research Centers", description: "Dedicated research centres for experiential and applied learning", num: "02" },
+  { id: 3, icon: Club, title: "Student Clubs", description: "Diverse student clubs spanning every passion and interest", num: "03" },
+  { id: 4, icon: Heart, title: "Diversity & Inclusion", description: "Unwavering commitment to diversity, equity and inclusivity", num: "04" },
+  { id: 5, icon: Activity, title: "Hospital Training", description: "1000-bed NABH-accredited hospital for hands-on clinical exposure", num: "05" },
+{ id: 6, icon: Award, title: "Sports Facilities", description: "Strong emphasis on sports with indoor complexes, 400m athletic turf track and grounds for football, hockey and cricket", num: "06" },
+{ id: 7, icon: Lightbulb, title: "Student Research Fund", description: "Student research supported by the KGI Student Research Fund and Atal Incubation Centre", num: "07" },
+{ id: 8, icon: Leaf, title: "Sustainable Campus", description: "Eco-friendly campuses with rainwater harvesting, solar energy harnessing, and a welcoming environment for migratory birds", num: "08" },
 ];
 
 function useInView(threshold = 0.12) {

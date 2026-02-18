@@ -53,29 +53,16 @@ export default function Index() {
       <style>{fontStyle}</style>
       <div className="min-h-screen bg-white flex flex-col pb-16 md:pb-0">
 
-        {/* 1 ── Navbar ── */}
+        {/* ── Navbar ── */}
         <Navbar />
 
-        {/* 2 ── Hero + Form (combined, full viewport) ── */}
-        <section className="flex flex-col lg:flex-row" style={{ minHeight: "calc(100vh - 80px)" }}>
-          {/* LEFT — Image Slider (60%) */}
-          <div className="flex-1 lg:flex-[1.65] min-h-[420px] lg:min-h-0">
-            <Hero />
-          </div>
+        {/* ── Hero (now contains BOTH slider + form integrated) ── */}
+        <Hero />
 
-          {/* Vertical divider accent */}
-          <div className="hidden lg:block w-px" style={{ background: "linear-gradient(to bottom, transparent, #E5E7EB 20%, #E5E7EB 80%, transparent)" }} />
-
-          {/* RIGHT — Compact Admission Form (40%) */}
-          <div className="flex-1 lg:flex-[1] border-t lg:border-t-0" style={{ maxWidth: "440px", minWidth: "320px" }}>
-            <AdmissionPanel />
-          </div>
-        </section>
-
-        {/* 4 ── Features ── */}
+        {/* ── Features ── */}
         <Features />
 
-        {/* 5 ── Institutions Strip ── */}
+        {/* ── Institutions Strip ── */}
         <section className="py-16 px-4 bg-gray-50 border-t border-gray-100">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
@@ -111,7 +98,7 @@ export default function Index() {
           </div>
         </section>
 
-        {/* 6 ── CTA Banner ── */}
+        {/* ── CTA Banner ── */}
         <section className="py-20 px-4 text-white relative overflow-hidden"
           style={{ background: "linear-gradient(135deg, #7F1D1D 0%, #B91C1C 50%, #991B1B 100%)" }}>
           <div className="absolute right-12 top-1/2 -translate-y-1/2 w-72 h-72 rounded-full border border-white/10 pointer-events-none" />
@@ -133,7 +120,7 @@ export default function Index() {
           </div>
         </section>
 
-        {/* 7 ── Footer ── */}
+        {/* ── Footer ── */}
         <Footer />
 
         {/* Fixed mobile bottom bar */}

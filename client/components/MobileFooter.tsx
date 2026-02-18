@@ -6,7 +6,7 @@ export default function MobileFooter() {
       <div className="flex">
         {/* WhatsApp Section */}
         <a
-          href="https://wa.me/918061234567"
+          href="https://wa.me/+918050064465"
           className="flex-1 bg-secondary hover:bg-opacity-80 transition px-4 py-3 flex items-center justify-center gap-2 border-r border-gray-200"
         >
           <MessageCircle className="w-5 h-5 text-text-dark" />

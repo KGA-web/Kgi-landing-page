@@ -16,6 +16,21 @@ module.exports = {
         // ── KGI Brand ──────────────────────────────
         "kgi-red": "#c8102e",
         // ───────────────────────────────────────────
+        // Add this inside extend: { ... }
+keyframes: {
+  marquee: {
+    "0%": { transform: "translateX(0)" },
+    "100%": { transform: "translateX(-50%)" },
+  },
+  "marquee-reverse": {
+    "0%": { transform: "translateX(-50%)" },
+    "100%": { transform: "translateX(0)" },
+  },
+},
+animation: {
+  marquee: "marquee 60s linear infinite",
+  "marquee-reverse": "marquee-reverse 60s linear infinite",
+},
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

@@ -4,6 +4,12 @@ import Features from "@/components/Features";
 import Footer from "@/components/Footer";
 import MobileFooter from "@/components/MobileFooter";
 import { ArrowRight } from "lucide-react";
+// 1. IMPORT the images at the top
+import kimsLogo from "/kimsb.png";
+import kihsLogo from "/kihs-card.png";
+import kihmLogo from "/kihm_crd.jpg";
+
+// 2. UPDATE your array to use the imported variables
 
 const fontStyle = `
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap');
@@ -13,7 +19,7 @@ const fontStyle = `
 const institutions = [
   {
     href: "https://kimsbengaluru.edu.in/",
-    image: "/kimsb.png", 
+    image: kimsLogo, // Using the variable
     name: "Management Studies",
     abbr: "KIMS",
     desc: "World-class business education in BBA, MBA and more",
@@ -21,7 +27,7 @@ const institutions = [
   },
   {
     href: "https://www.kgi.edu.in/KIHS/index.php",
-    image: "/kihs-card.png", 
+    image: kihsLogo, // Using the variable
     name: "Health Sciences",
     abbr: "KIHS",
     desc: "Nursing and allied health science programs for tomorrow's healthcare leaders",
@@ -29,7 +35,7 @@ const institutions = [
   },
   {
     href: "https://kihm.kgi.edu.in/",
-    image: "/kihm_crd.jpg", 
+    image: kihmLogo, // Using the variable
     name: "Hotel Management",
     abbr: "KIHM",
     desc: "Excellence in hospitality training and hotel management education",

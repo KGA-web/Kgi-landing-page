@@ -175,25 +175,28 @@ export default function Hero() {
     if (!captchaOk) { setErrors(p => ({ ...p, captchaAnswer: 'Please verify the CAPTCHA first.' })); return; }
     
     setLoading(true); setSubmitErr('');
-    try {
-      const generatedId = 'KGI' + Date.now().toString().slice(-7);
-      const body = new FormData();
-      body.append('applicationId', generatedId);
-      body.append('timestamp', new Date().toLocaleString('en-IN'));
-      body.append('name', fd.name.trim());
-      body.append('mobile', fd.mobile.trim());
-      body.append('email', fd.email.trim());
-      body.append('programLevel', fd.programLevel);
-      body.append('program', fd.program);
-      
-      await fetch(GOOGLE_SHEET_URL, { method: 'POST', body, mode: 'no-cors' });
-      setAppId(generatedId);
-      setDone(true);
-    } catch {
-      setSubmitErr('Network error. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+try {
+  const generatedId = 'KGI' + Date.now().toString().slice(-7);
+  const params = new URLSearchParams({
+    applicationId: generatedId,
+    timestamp: new Date().toLocaleString('en-IN'),
+    name: fd.name.trim(),
+    mobile: fd.mobile.trim(),
+    email: fd.email.trim(),
+    programLevel: fd.programLevel,
+    program: fd.program,
+  });
+  await fetch(`${GOOGLE_SHEET_URL}?${params.toString()}`, {
+    method: 'GET',
+    mode: 'no-cors',
+  });
+  setAppId(generatedId);
+  setDone(true);
+} catch {
+  setSubmitErr('Network error. Please try again.');
+} finally {
+  setLoading(false);
+}
   };
 
   // ══════════════════════════════════════════════════════════════

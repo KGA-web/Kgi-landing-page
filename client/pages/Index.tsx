@@ -3,7 +3,6 @@ import Hero from "@/components/Hero";
 import Features from "@/components/Features";
 import Footer from "@/components/Footer";
 import MobileFooter from "@/components/MobileFooter";
-import Image from "next/image"; // FIX: Corrected import
 import { ArrowRight } from "lucide-react";
 
 const fontStyle = `
@@ -51,6 +50,7 @@ export default function Index() {
 
         <Features />
 
+        {/* 4 ── Institutions Strip ── */}
         <section className="py-16 px-4 bg-gray-50 border-t border-gray-100">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
@@ -60,7 +60,6 @@ export default function Index() {
               </h2>
             </div>
             
-            {/* 80/20 Hint: Use max-w-5xl here since you only have 3 items to keep the grid tight */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"> 
               {institutions.map((inst) => (
                 <a key={inst.abbr} href={inst.href}
@@ -71,14 +70,13 @@ export default function Index() {
                     <div className="absolute -right-4 -top-4 w-20 h-20 rounded-full bg-white/5" />
                     <div className="absolute -left-6 -bottom-6 w-24 h-24 rounded-full bg-white/5" />
                     
-                    {/* Container for the image to maintain aspect ratio */}
+                    {/* Vite-compatible <img> tag */}
                     <div className="relative z-10 w-32 h-32 transition-all duration-500 group-hover:scale-110">
-                      <Image 
+                      <img 
                         src={inst.image} 
                         alt={inst.name} 
-                        fill 
-                        className="object-contain"
-                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="w-full h-full object-contain p-2"
+                        loading="lazy" 
                       />
                     </div>
                   </div>

@@ -100,13 +100,13 @@ export default function Hero() {
   const [auto, setAuto] = useState(true);
   const canvasRef = useRef(null);
   useParticles(canvasRef);
-
+  
   useEffect(() => {
     if (!auto) return;
     const t = setInterval(() => go((cur + 1) % heroImages.length), 5000);
     return () => clearInterval(t);
   }, [auto, cur]);
-
+  
   const go = (i) => { setFade(false); setTimeout(() => { setCur(i); setFade(true); }, 350); };
 
   // ── Form state ─────────────────────────────────────────────────
@@ -120,6 +120,7 @@ export default function Hero() {
     programLevel: '', program: '',
     captchaAnswer: '', authorization: false,
   });
+  
   const [errors, setErrors]     = useState({});
   const [touched, setTouched]   = useState({});
   const [progs, setProgs]       = useState([]);
@@ -135,14 +136,15 @@ export default function Hero() {
       setErrors(p => ({ ...p, [k]: errs[k] }));
     }
   };
+  
   const blur = (k) => {
     setTouched(p => ({ ...p, [k]: true }));
     setErrors(p => ({ ...p, [k]: validateForm(fd)[k] }));
   };
-
+  
   const ic = (name) => `${I}${errors[name] ? ' border-red-400/60 bg-red-900/20' : ''}`;
   const sc = (name) => `${S}${errors[name] ? ' border-red-400/60' : ''}`;
-
+  
   const FieldErr = ({ name }) => errors[name]
     ? <p className="mt-1 text-[10px] text-red-400 flex items-center gap-1">
         <AlertCircle size={9} className="shrink-0" />{errors[name]}
@@ -168,9 +170,10 @@ export default function Hero() {
     setTouched(allTouched);
     const errs = validateForm(fd);
     setErrors(errs);
+    
     if (Object.keys(errs).length > 0) return;
     if (!captchaOk) { setErrors(p => ({ ...p, captchaAnswer: 'Please verify the CAPTCHA first.' })); return; }
-
+    
     setLoading(true); setSubmitErr('');
     try {
       const generatedId = 'KGI' + Date.now().toString().slice(-7);
@@ -182,8 +185,8 @@ export default function Hero() {
       body.append('email', fd.email.trim());
       body.append('programLevel', fd.programLevel);
       body.append('program', fd.program);
-
-      await fetch(GOOGLE_SHEET_URL, { method: 'POST', body });
+      
+      await fetch(GOOGLE_SHEET_URL, { method: 'POST', body, mode: 'no-cors' });
       setAppId(generatedId);
       setDone(true);
     } catch {
@@ -201,21 +204,24 @@ export default function Hero() {
       onMouseEnter={() => setAuto(false)}
       onMouseLeave={() => setAuto(true)}
     >
-      {/* ── Slider BG (unchanged) ── */}
+      {/* ── Slider BG ── */}
       {heroImages.map((img, i) => (
         <div key={img.id} className="absolute inset-0 transition-opacity duration-700" style={{ opacity: i === cur ? 1 : 0 }}>
           <img src={img.url} alt={img.label} className="w-full h-full object-cover" />
         </div>
       ))}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/88 via-black/62 to-black/45" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+      
+      {/* ✨ DARKER OVERLAYS — increased opacity values ✨ */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/92 via-black/75 to-black/60" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+      
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-10" />
 
-      {/* ── Layout (unchanged) ── */}
+      {/* ── Layout ── */}
       <div className="relative z-20 w-full flex items-center" style={{ minHeight: 'inherit' }}>
         <div className="w-full max-w-7xl mx-auto px-5 md:px-10 py-10 flex flex-col lg:flex-row items-center gap-10 lg:gap-6">
 
-          {/* LEFT text (unchanged) */}
+          {/* LEFT text */}
           <div className="flex-1 lg:pr-8 transition-opacity duration-400" style={{ opacity: fade ? 1 : 0 }}>
             <span className="mb-5 inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-[.18em]"
               style={{ background: 'rgba(220,38,38,.75)', color: '#fff', backdropFilter: 'blur(6px)' }}>
@@ -245,7 +251,7 @@ export default function Hero() {
           <div className="w-full lg:w-auto lg:flex-shrink-0" style={{ maxWidth: 400, width: '100%' }}>
             <div className="rounded-2xl overflow-hidden"
               style={{ background: 'rgba(8,8,8,.72)', backdropFilter: 'blur(22px)', border: '1px solid rgba(255,255,255,.12)', boxShadow: '0 28px 64px rgba(0,0,0,.55)' }}>
-
+              
               {/* Card header */}
               <div className="px-5 pt-5 pb-4" style={{ borderBottom: '1px solid rgba(255,255,255,.08)' }}>
                 <span className="text-[10px] font-bold uppercase tracking-widest text-yellow-400">Admissions Open 2025–26</span>
@@ -256,7 +262,7 @@ export default function Hero() {
 
               {/* ── Form body ── */}
               <div className="px-5 py-4 overflow-y-auto" style={{ maxHeight: '72vh' }}>
-
+                
                 {/* ── SUCCESS screen ── */}
                 {done ? (
                   <div className="text-center py-6">
@@ -280,13 +286,12 @@ export default function Hero() {
                       Return Home <ArrowRight size={13} />
                     </a>
                   </div>
-
                 ) : (
                   /* ══════════════════════════════════════════════
-                     REGISTRATION FORM  ── simplified + validated
+                     REGISTRATION FORM
                      ══════════════════════════════════════════════ */
                   <form onSubmit={submitReg} className="space-y-3" noValidate>
-
+                    
                     {/* Network error */}
                     {submitErr && (
                       <div className="flex items-start gap-2 p-2.5 rounded-lg"
@@ -381,7 +386,6 @@ export default function Hero() {
                         </div>
                       ) : (
                         <>
-                          {/* Math question */}
                           <div className="flex items-center justify-between mb-2 px-3 py-2 rounded-lg"
                             style={{ background: 'rgba(0,0,0,.3)', border: '1px solid rgba(255,255,255,.1)' }}>
                             <span className="text-[10px] text-white/50">Solve:</span>
@@ -449,10 +453,11 @@ export default function Hero() {
               </div>
             </div>
           </div>
+
         </div>
       </div>
 
-      {/* ── Slider controls (unchanged) ── */}
+      {/* ── Slider controls ── */}
       <button onClick={() => { go((cur - 1 + heroImages.length) % heroImages.length); setAuto(false); }}
         className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-2.5 rounded-full transition hover:scale-110"
         style={{ background: 'rgba(255,255,255,.12)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,.18)' }}
@@ -463,6 +468,7 @@ export default function Hero() {
         style={{ background: 'rgba(255,255,255,.12)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,.18)' }}
         aria-label="Next"><ChevronRight size={20} className="text-white" />
       </button>
+      
       <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-30 flex gap-2 items-center">
         {heroImages.map((_, i) => (
           <button key={i} onClick={() => { go(i); setAuto(false); }}
@@ -471,6 +477,7 @@ export default function Hero() {
             aria-label={`Slide ${i + 1}`} />
         ))}
       </div>
+      
       <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/10 z-30">
         <div className="h-full bg-yellow-400 transition-all duration-300"
           style={{ width: `${((cur + 1) / heroImages.length) * 100}%` }} />

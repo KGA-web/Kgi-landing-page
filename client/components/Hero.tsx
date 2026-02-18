@@ -1,16 +1,20 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Phone, Loader, CheckCircle, AlertCircle, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import managementImg from '../public/Management.png';
+import healthImg from '../public/Health.png';
+import hotelImg from '../public/Hotel.mgmt.png';
+import researchImg from '../public/research.png';
 
 // ─────────────────────────────────────────────────────────────────
 const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyjho59uS7yLSETGdJZoL-Dr1V1BAbW2UeQcOgP8eIOCap37DDMHXe84_UYT-RTVJ1m/exec';
 
 // ── All original data / constants (unchanged) ────────────────────
 const heroImages = [
-  { id:1, label:'Management Studies',    url:'/Management.png' },
-  { id:2, label:'Health Sciences',       url:'/Health.png' },
-  { id:3, label:'Hotel Management',      url:'/Hotel.mgmt.png' },
-  { id:4, label:'Research & Innovation', url:'/research.png' },
+  { id: 1, label: 'Management Studies',    url: managementImg },
+  { id: 2, label: 'Health Sciences',       url: healthImg },
+  { id: 3, label: 'Hotel Management',      url: hotelImg },
+  { id: 4, label: 'Research & Innovation', url: researchImg },
 ];
 
 const PROGRAM_LEVELS = ['Undergraduate (UG)','Postgraduate (PG)','Nursing','Allied Health Sciences','Diploma','PhD'];

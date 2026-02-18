@@ -4,9 +4,8 @@ import Autoplay from "embla-carousel-autoplay";
 import { Play, ChevronLeft, ChevronRight } from "lucide-react";
 
 const VIDEOS = [
-  { id: "zA30JjKL-qw63wFu", type: "video", title: "A New Era of Academic Excellence Begins | KIMS" }, 
-  { id: "gaJ_yPGH-yt2_i-n", type: "video", title: "Why KIHS?" }, 
-  { id: "sRa-dspXE_RiZP-c", type: "short", title: "KGI Campus" },   
+  { id: "FLrFpdR1DII", type: "video", title: "A New Era of Academic Excellence Begins | KIMS" }, 
+  { id: "rb12SDB1ngg", type: "video", title: "Why KIHS?" }, 
 ];
 
 export const KgiVideoSlider = () => {

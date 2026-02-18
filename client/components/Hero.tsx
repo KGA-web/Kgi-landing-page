@@ -224,8 +224,8 @@ export default function Hero() {
               style={{ fontFamily: "'Inter', sans-serif", fontSize: 'clamp(2.5rem, 5vw, 4rem)' }}>
               Shape Your Future <br />
               <span className="text-white/90 font-light italic" style={{ fontFamily: "'Playfair Display', serif" }}>at</span>{' '}
-              <span style={{ color: '#FCD34D' }}>Koshys Group</span><br />
-              <span style={{ color: '#911d30' }} className="drop-shadow-sm">Institutions</span>
+              <span style={{ color: '#FCD34D' }}>Koshys Group of</span><br />
+              <span style={{ color: '#ffe9c6' }} className="drop-shadow-sm">Institutions</span>
             </h1>
 
             <p className="text-gray-300 text-sm md:text-base max-w-md leading-relaxed mb-10 font-medium opacity-80">

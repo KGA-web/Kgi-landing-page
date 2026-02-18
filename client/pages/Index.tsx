@@ -4,7 +4,7 @@ import Features from "@/components/Features";
 import Footer from "@/components/Footer";
 import MobileFooter from "@/components/MobileFooter";
 import { RecruitingPartners } from "@/components/RecruitingPartners";
-import { KgiVideoSlider } from "@/components/KgiVideoSlider";
+import { KgiVideoSlider } from "@/components/VideoSlider";
 import { ArrowRight } from "lucide-react";
 
 // Assets - Optimized Imports

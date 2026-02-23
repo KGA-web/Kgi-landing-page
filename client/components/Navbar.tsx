@@ -1,405 +1,231 @@
+'use client';
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react';
 
-export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [openDropdowns, setOpenDropdowns] = useState<string[]>([]);
+const navItems = [
+  {
+    label: 'About KGI',
+    children: [
+      { label: 'About Us', href: 'https://www.kgi.edu.in/AboutWhyKGI.php' },
+      { label: 'Mission & Vision', href: 'https://www.kgi.edu.in/mission-and-vission.php' },
+      { label: 'Milestones', href: 'https://www.kgi.edu.in/milestone.php' },
+      { label: 'Founder', href: 'https://www.kgi.edu.in/FounderMessageKGI.php' },
+      { label: 'Leadership Team', href: 'https://www.kgi.edu.in/leadership.php' },
+      { label: 'Industrial Association', href: 'https://www.kgi.edu.in/industrial-association.php' },
+      { label: 'Advisory Board', href: 'https://www.kgi.edu.in/advisory-board.php' },
+      { label: 'Affiliation & Accreditation', href: 'https://www.kgi.edu.in/affiliarion.php' },
+    ],
+  },
+  {
+    label: 'Institutions',
+    children: [
+      { label: 'Koshys Institute of Management Studies', href: 'https://kimsbengaluru.edu.in/' },
+      { label: 'Koshys Institute of Health Sciences', href: 'https://www.kgi.edu.in/KIHS/index.php' },
+      { label: 'Koshys Institute of Hotel Management', href: 'https://kimsbengaluru.edu.in/bhm' },
+      { label: 'Koshys Global Academia (CBSE)', href: 'https://koshysglobalacademia.com/' },
+    ],
+  },
+  {
+    label: 'Courses',
+    children: [
+      {
+        label: 'UG', href: '#', children: [
+          { label: 'B.Sc Forensic Science', href: 'https://kimsbengaluru.edu.in/BA-cpj.php' },
+          { label: 'BVA - Animation & Multimedia', href: 'https://kimsbengaluru.edu.in/BVA.php' },
+          { label: 'BVA - Applied Arts & Graphic', href: 'https://kimsbengaluru.edu.in/bvaag.php' },
+          { label: 'BVA - Interior & Spatial Design', href: 'https://kimsbengaluru.edu.in/BVA-aa.php' },
+          { label: 'BBA', href: 'https://kimsbengaluru.edu.in/bba.php' },
+          { label: 'BBA Aviation (BNU)', href: 'https://kimsbengaluru.edu.in/BBA-ava.php' },
+          { label: 'BBA Advanced', href: 'https://kimsbengaluru.edu.in/bba.php' },
+          { label: 'B.Com', href: 'https://kimsbengaluru.edu.in/BCom.php' },
+          { label: 'B.Com Logistics', href: 'https://kimsbengaluru.edu.in/BCOM-log.php' },
+          { label: 'B.Com Advanced', href: 'https://kimsbengaluru.edu.in/BCom' },
+          { label: 'BCA', href: 'https://kimsbengaluru.edu.in/BCA.php' },
+          { label: 'BCA Advanced', href: 'https://kimsbengaluru.edu.in/BCA.php' },
+        ],
+      },
+      {
+        label: 'PG', href: '#', children: [
+          { label: 'MBA', href: 'https://kimsbengaluru.edu.in/MBA.php' },
+          { label: 'MCA', href: 'https://kimsbengaluru.edu.in/MCA.php' },
+        ],
+      },
+      {
+        label: 'Nursing', href: '#', children: [
+          { label: 'GNM', href: 'https://kgi.edu.in/KIHS/gnm.php' },
+          { label: 'B.Sc Nursing', href: 'https://kgi.edu.in/KIHS/bscNursing.php' },
+          { label: 'PBBSc', href: 'https://kgi.edu.in/KIHS/pbBsc.php' },
+          { label: 'M.Sc Nursing', href: 'https://kgi.edu.in/KIHS/MscNursing.php' },
+        ],
+      },
+      {
+        label: 'Allied Health Sciences', href: '#', children: [
+          { label: 'B.Sc Renal Dialysis', href: 'https://kgi.edu.in/KIHS/BSCren.php' },
+          { label: 'B.Sc Respiratory', href: 'https://kgi.edu.in/KIHS/BSCres.php' },
+          { label: 'B.Sc AT & OT', href: 'https://kgi.edu.in/KIHS/bscOtt.php' },
+          { label: 'B.Sc MIT', href: 'https://kgi.edu.in/KIHS/bscMit.php' },
+          { label: 'B.Sc MLT', href: 'https://kgi.edu.in/KIHS/BSCmlt.php' },
+        ],
+      },
+      { label: 'Hotel Management', href: 'https://kimsbengaluru.edu.in/bhm' },
+      { label: 'School', href: 'https://koshysglobalacademia.com/' },
+    ],
+  },
+  {
+    label: 'Admissions',
+    children: [
+      { label: 'Apply Now', href: 'https://apply.kgi.edu.in/' },
+      {
+        label: 'Download Brochure', href: '#', children: [
+          { label: 'UG & PG', href: 'https://kimsbengaluru.edu.in/kimsmail' },
+          { label: 'Health Sciences', href: 'https://www.kgi.edu.in/KIHS/kihsmail' },
+        ],
+      },
+    ],
+  },
+  {
+    label: 'Login',
+    children: [
+      { label: 'Employee Login', href: 'https://kgi.pro910.com/Pro910/Login/login.php' },
+      { label: 'Student Login', href: 'https://kgi.pro910.com/Pro910/Login/login.php' },
+    ],
+  },
+];
 
-  const toggleDropdown = (name: string) => {
-    setOpenDropdowns(prev =>
-      prev.includes(name)
-        ? prev.filter(item => item !== name)
-        : [...prev, name]
+// Recursive mobile accordion item
+function MobileItem({ item, depth = 0 }: { item: any; depth?: number }) {
+  const [open, setOpen] = useState(false);
+  const hasChildren = item.children?.length > 0;
+  const pl = depth === 0 ? 'px-4' : depth === 1 ? 'px-8' : 'px-12';
+
+  if (!hasChildren) {
+    return (
+      <a
+        href={item.href}
+        className={`block ${pl} py-2.5 text-xs font-semibold uppercase tracking-wide text-gray-700 hover:bg-red-50 hover:text-red-700 border-b border-gray-100 transition-colors`}
+      >
+        {item.label}
+      </a>
     );
-  };
+  }
 
   return (
-    <header className="bg-kgi-red w-full z-50">
-      <div className="flex items-center justify-between px-4 md:px-[4%]">
-        {/* Logo */}
-        <div className="flex-shrink-0 py-4">
-          <a href="https://kgi.edu.in/" className="inline-block">
-            <img
-              alt="Koshys Global Academia logo"
-              loading="lazy"
-              src="https://www.kgi.edu.in/assets/images/kgi-light-logo.png"
-              className="max-w-xs md:max-w-sm h-auto hidden md:block"
-            />
-            <img
-              alt="KGI favicon"
-              loading="lazy"
-              src="https://kgi.edu.in/assets/images/fav.png"
-              className="max-w-12 md:hidden"
-            />
-          </a>
+    <div>
+      <button
+        onClick={() => setOpen(!open)}
+        className={`w-full flex items-center justify-between ${pl} py-2.5 text-xs font-semibold uppercase tracking-wide text-gray-800 hover:bg-red-50 hover:text-red-700 border-b border-gray-100 transition-colors`}
+      >
+        {item.label}
+        <ChevronDown size={13} className={`mr-1 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <div className={`bg-gray-50 ${depth > 0 ? 'border-l-2 border-red-200 ml-4' : ''}`}>
+          {item.children.map((child: any) => (
+            <MobileItem key={child.label} item={child} depth={depth + 1} />
+          ))}
         </div>
+      )}
+    </div>
+  );
+}
 
-        {/* Mobile menu button */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden text-white"
-          aria-label="Toggle menu"
-        >
-          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+// Desktop dropdown (recursive)
+function DesktopDropdown({ items, level = 0 }: { items: any[]; level?: number }) {
+  return (
+    <ul className={`absolute bg-white text-black shadow-xl border border-gray-100 w-56 z-50 ${level === 0 ? 'top-full left-0' : 'top-0 left-full'}`}>
+      {items.map((item) => {
+        const hasChildren = item.children?.length > 0;
+        return (
+          <li key={item.label} className="relative group/sub">
+            <a
+              href={item.href || '#'}
+              className="flex items-center justify-between px-4 py-3 text-xs uppercase font-medium hover:bg-red-50 hover:text-red-700 transition-colors border-b border-gray-50"
+            >
+              {item.label}
+              {hasChildren && <ChevronRight size={11} className="text-gray-400" />}
+            </a>
+            {hasChildren && (
+              <div className="absolute top-0 left-full hidden group-hover/sub:block">
+                <DesktopDropdown items={item.children} level={level + 1} />
+              </div>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
 
-        {/* Desktop Navigation */}
+export default function Header() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  return (
+    <header className="bg-kgi-red w-full z-50 sticky top-0 shadow-md">
+      <div className="flex items-center justify-between px-4 md:px-[4%] h-16 md:h-auto">
+
+        {/* Logo */}
+        <a href="https://kgi.edu.in/" className="flex-shrink-0 py-3">
+          <img
+            alt="Koshys Group of Institutions"
+            src="https://www.kgi.edu.in/assets/images/kgi-light-logo.png"
+            className="h-10 w-auto hidden md:block"
+          />
+          <img
+            alt="KGI"
+            src="https://kgi.edu.in/assets/images/fav.png"
+            className="h-9 w-auto md:hidden"
+          />
+        </a>
+
+        {/* Desktop Nav */}
         <nav className="hidden md:block">
-          <ul className="flex items-center gap-0">
-            {/* About KGI */}
-            <li className="relative group">
-              <a
-                href="#"
-                className="text-white text-sm font-semibold uppercase px-5 py-6 block hover:bg-black/10 transition-colors"
-              >
-                About KGI
-              </a>
-              <ul className="absolute left-0 top-full bg-white text-black w-48 hidden group-hover:block shadow-lg">
-                <li>
-                  <a href="https://www.kgi.edu.in/AboutWhyKGI.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.kgi.edu.in/mission-and-vission.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">
-                    Mission & Vision
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.kgi.edu.in/milestone.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">
-                    Milestones
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.kgi.edu.in/FounderMessageKGI.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">
-                    Founder
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.kgi.edu.in/leadership.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">
-                    Leadership Team
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.kgi.edu.in/industrial-association.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">
-                    Industrial Association
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.kgi.edu.in/advisory-board.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">
-                    Advisory Board
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.kgi.edu.in/affiliarion.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">
-                    Affiliation and Accreditation
-                  </a>
-                </li>
-              </ul>
-            </li>
-
-            {/* Institutions */}
-            <li className="relative group">
-              <a
-                href="#"
-                className="text-white text-sm font-semibold uppercase px-5 py-6 block hover:bg-black/10 transition-colors"
-              >
-                Institutions
-              </a>
-              <ul className="absolute left-0 top-full bg-white text-black w-48 hidden group-hover:block shadow-lg">
-                <li>
-                  <a href="https://kimsbengaluru.edu.in/" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">
-                    Koshys Institute of Management Studies
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.kgi.edu.in/KIHS/index.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">
-                    Koshys Institute of Health Sciences
-                  </a>
-                </li>
-                <li>
-                  <a href="https://kimsbengaluru.edu.in/bhm" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">
-                    Koshys Institute of Hotel Management
-                  </a>
-                </li>
-                <li>
-                  <a href="https://koshysglobalacademia.com/" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">
-                    Koshys Global Academia (CBSC)
-                  </a>
-                </li>
-              </ul>
-            </li>
-
-            {/* Courses */}
-            <li className="relative group">
-              <a
-                href="#"
-                className="text-white text-sm font-semibold uppercase px-5 py-6 block hover:bg-black/10 transition-colors"
-              >
-                Courses
-              </a>
-              <ul className="absolute left-0 top-full bg-white text-black w-48 hidden group-hover:block shadow-lg">
-                {/* UG */}
-                <li className="relative group/ug">
-                  <a href="#" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors flex items-center justify-between">
-                    UG
-                    <span>›</span>
-                  </a>
-                  <ul className="absolute left-48 top-0 bg-white text-black w-48 hidden group-hover/ug:block shadow-lg">
-                    <li><a href="https://kimsbengaluru.edu.in/BA-cpj.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">B.Sc Forensic Sc.</a></li>
-                    <li><a href="https://kimsbengaluru.edu.in/BVA.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">BVA - Animation and Multimedia Design</a></li>
-                    <li><a href="https://kimsbengaluru.edu.in/bvaag.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">BVA - Applied Arts and Graphic Design</a></li>
-                    <li><a href="https://kimsbengaluru.edu.in/BVA-aa.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">BVA - Interior & Spatial Design</a></li>
-                    <li><a href="https://kimsbengaluru.edu.in/bba.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">BBA</a></li>
-                    <li><a href="https://kimsbengaluru.edu.in/BBA-ava.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">BBA Aviation (BNU)</a></li>
-                    <li><a href="https://kimsbengaluru.edu.in/bba.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">BBA Advanced</a></li>
-                    <li><a href="https://kimsbengaluru.edu.in/BCom.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">B.Com</a></li>
-                    <li><a href="https://kimsbengaluru.edu.in/BCOM-log.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">B.Com Logistics</a></li>
-                    <li><a href="https://kimsbengaluru.edu.in/BCom" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">B.Com Advanced</a></li>
-                    <li><a href="https://kimsbengaluru.edu.in/BCA.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">BCA</a></li>
-                    <li><a href="https://kimsbengaluru.edu.in/BCA.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">BCA Advanced</a></li>
-                  </ul>
-                </li>
-
-                {/* PG */}
-                <li className="relative group/pg">
-                  <a href="#" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors flex items-center justify-between">
-                    PG
-                    <span>›</span>
-                  </a>
-                  <ul className="absolute left-48 top-0 bg-white text-black w-48 hidden group-hover/pg:block shadow-lg">
-                    <li><a href="https://kimsbengaluru.edu.in/MBA.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">MBA</a></li>
-                    <li><a href="https://kimsbengaluru.edu.in/MCA.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">MCA</a></li>
-                  </ul>
-                </li>
-
-                {/* Nursing */}
-                <li className="relative group/nursing">
-                  <a href="#" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors flex items-center justify-between">
-                    Nursing
-                    <span>›</span>
-                  </a>
-                  <ul className="absolute left-48 top-0 bg-white text-black w-48 hidden group-hover/nursing:block shadow-lg">
-                    <li><a href="https://kgi.edu.in/KIHS/gnm.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">GNM</a></li>
-                    <li><a href="https://kgi.edu.in/KIHS/bscNursing.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">B.Sc Nursing</a></li>
-                    <li><a href="https://kgi.edu.in/KIHS/pbBsc.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">PBBSc</a></li>
-                    <li><a href="https://kgi.edu.in/KIHS/MscNursing.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">M.Sc Nursing</a></li>
-                  </ul>
-                </li>
-
-                {/* Allied Health Sciences */}
-                <li className="relative group/allied">
-                  <a href="#" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors flex items-center justify-between">
-                    Allied Health Sciences
-                    <span>›</span>
-                  </a>
-                  <ul className="absolute left-48 top-0 bg-white text-black w-48 hidden group-hover/allied:block shadow-lg">
-                    <li><a href="https://kgi.edu.in/KIHS/BSCren.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">B.Sc Renal Dialysis</a></li>
-                    <li><a href="https://kgi.edu.in/KIHS/BSCres.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">B.Sc Respiratory</a></li>
-                    <li><a href="https://kgi.edu.in/KIHS/bscOtt.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">B.Sc AT & OT</a></li>
-                    <li><a href="https://kgi.edu.in/KIHS/bscMit.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">B.Sc MIT</a></li>
-                    <li><a href="https://kgi.edu.in/KIHS/BSCmlt.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">B.Sc MLT</a></li>
-                  </ul>
-                </li>
-
-                <li>
-                  <a href="https://kimsbengaluru.edu.in/bhm" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">
-                    Hotel Management
-                  </a>
-                </li>
-                <li>
-                  <a href="https://koshysglobalacademia.com/" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">
-                    School
-                  </a>
-                </li>
-              </ul>
-            </li>
-
-            {/* Admissions */}
-            <li className="relative group">
-              <a
-                href="#"
-                className="text-white text-sm font-semibold uppercase px-5 py-6 block hover:bg-black/10 transition-colors"
-              >
-                Admissions
-              </a>
-              <ul className="absolute left-0 top-full bg-white text-black w-48 hidden group-hover:block shadow-lg">
-                <li>
-                  <a href="https://apply.kgi.edu.in/" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">
-                    Apply Now
-                  </a>
-                </li>
-                <li className="relative group/brochure">
-                  <a href="#" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors flex items-center justify-between">
-                    Download Brochure
-                    <span>›</span>
-                  </a>
-                  <ul className="absolute left-48 top-0 bg-white text-black w-48 hidden group-hover/brochure:block shadow-lg">
-                    <li><a href="https://kimsbengaluru.edu.in/kimsmail" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">UG & PG</a></li>
-                    <li><a href="https://www.kgi.edu.in/KIHS/kihsmail" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">Health Sciences</a></li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-
-            {/* Login */}
-            <li className="relative group">
-              <a
-                href="#"
-                className="text-white text-sm font-semibold uppercase px-5 py-6 block hover:bg-black/10 transition-colors"
-              >
-                Login
-              </a>
-              <ul className="absolute left-0 top-full bg-white text-black w-48 hidden group-hover:block shadow-lg">
-                <li>
-                  <a href="https://kgi.pro910.com/Pro910/Login/login.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">
-                    Employee Login
-                  </a>
-                </li>
-                <li>
-                  <a href="https://kgi.pro910.com/Pro910/Login/login.php" className="block px-4 py-3 text-xs uppercase hover:bg-gray-100 transition-colors">
-                    Student Login
-                  </a>
-                </li>
-              </ul>
-            </li>
-
-            {/* Contact Button */}
+          <ul className="flex items-center">
+            {navItems.map((item) => (
+              <li key={item.label} className="relative group">
+                <a
+                  href="#"
+                  className="text-white text-sm font-semibold uppercase px-4 py-6 flex items-center gap-1 hover:bg-black/15 transition-colors"
+                >
+                  {item.label}
+                  <ChevronDown size={12} className="opacity-70" />
+                </a>
+                <div className="absolute top-full left-0 hidden group-hover:block">
+                  <DesktopDropdown items={item.children} />
+                </div>
+              </li>
+            ))}
             <li>
               <a href="https://kgi.edu.in/ContactKGI.php">
-                <button className="bg-gray-100 text-gray-800 font-semibold py-2 px-6 rounded text-xs uppercase hover:bg-gray-200 transition-colors ml-2">
+                <button className="ml-2 bg-white text-red-800 font-bold py-2 px-5 rounded text-xs uppercase hover:bg-gray-100 transition-colors">
                   Contact Us
                 </button>
               </a>
             </li>
           </ul>
         </nav>
+
+        {/* Mobile hamburger */}
+        <button
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="md:hidden text-white p-2 rounded hover:bg-white/10 transition-colors"
+          aria-label="Toggle menu"
+        >
+          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
       </div>
 
-      {/* Mobile Navigation */}
-      {mobileMenuOpen && (
-        <nav className="md:hidden bg-white text-black border-t border-gray-200">
-          <div className="px-4 py-4 space-y-2 max-h-96 overflow-y-auto">
-            {/* About KGI */}
-            <div>
-              <button
-                onClick={() => toggleDropdown('about')}
-                className="w-full text-left px-3 py-2 text-sm font-semibold uppercase hover:bg-gray-100 rounded"
-              >
-                About KGI {openDropdowns.includes('about') ? '▼' : '▶'}
+      {/* Mobile Nav */}
+      {mobileOpen && (
+        <nav className="md:hidden bg-white border-t-2 border-red-800 max-h-[80vh] overflow-y-auto shadow-xl">
+          {navItems.map((item) => (
+            <MobileItem key={item.label} item={item} depth={0} />
+          ))}
+          <div className="px-4 py-3 border-t border-gray-200">
+            <a href="https://kgi.edu.in/ContactKGI.php">
+              <button className="w-full bg-red-700 text-white font-bold py-2.5 px-4 rounded text-xs uppercase hover:bg-red-800 transition-colors">
+                Contact Us
               </button>
-              {openDropdowns.includes('about') && (
-                <div className="bg-gray-50 pl-4 space-y-1">
-                  <a href="https://www.kgi.edu.in/AboutWhyKGI.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">About Us</a>
-                  <a href="https://www.kgi.edu.in/mission-and-vission.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">Mission & Vision</a>
-                  <a href="https://www.kgi.edu.in/milestone.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">Milestones</a>
-                  <a href="https://www.kgi.edu.in/FounderMessageKGI.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">Founder</a>
-                  <a href="https://www.kgi.edu.in/leadership.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">Leadership Team</a>
-                  <a href="https://www.kgi.edu.in/industrial-association.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">Industrial Association</a>
-                  <a href="https://www.kgi.edu.in/advisory-board.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">Advisory Board</a>
-                  <a href="https://www.kgi.edu.in/affiliarion.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">Affiliation and Accreditation</a>
-                </div>
-              )}
-            </div>
-
-            {/* Institutions */}
-            <div>
-              <button
-                onClick={() => toggleDropdown('institutions')}
-                className="w-full text-left px-3 py-2 text-sm font-semibold uppercase hover:bg-gray-100 rounded"
-              >
-                Institutions {openDropdowns.includes('institutions') ? '▼' : '▶'}
-              </button>
-              {openDropdowns.includes('institutions') && (
-                <div className="bg-gray-50 pl-4 space-y-1">
-                  <a href="https://kimsbengaluru.edu.in/" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">Koshys Institute of Management Studies</a>
-                  <a href="https://www.kgi.edu.in/KIHS/index.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">Koshys Institute of Health Sciences</a>
-                  <a href="https://kimsbengaluru.edu.in/bhm" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">Koshys Institute of Hotel Management</a>
-                  <a href="https://koshysglobalacademia.com/" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">Koshys Global Academia (CBSC)</a>
-                </div>
-              )}
-            </div>
-
-            {/* Courses */}
-            <div>
-              <button
-                onClick={() => toggleDropdown('courses')}
-                className="w-full text-left px-3 py-2 text-sm font-semibold uppercase hover:bg-gray-100 rounded"
-              >
-                Courses {openDropdowns.includes('courses') ? '▼' : '▶'}
-              </button>
-              {openDropdowns.includes('courses') && (
-                <div className="bg-gray-50 pl-4 space-y-1">
-                  <a href="https://kimsbengaluru.edu.in/BA-cpj.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">B.Sc Forensic Sc.</a>
-                  <a href="https://kimsbengaluru.edu.in/BVA.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">BVA - Animation and Multimedia Design</a>
-                  <a href="https://kimsbengaluru.edu.in/bvaag.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">BVA - Applied Arts and Graphic Design</a>
-                  <a href="https://kimsbengaluru.edu.in/BVA-aa.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">BVA - Interior & Spatial Design</a>
-                  <a href="https://kimsbengaluru.edu.in/bba.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">BBA</a>
-                  <a href="https://kimsbengaluru.edu.in/BBA-ava.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">BBA Aviation (BNU)</a>
-                  <a href="https://kimsbengaluru.edu.in/bba.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">BBA Advanced</a>
-                  <a href="https://kimsbengaluru.edu.in/BCom.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">B.Com</a>
-                  <a href="https://kimsbengaluru.edu.in/BCOM-log.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">B.Com Logistics</a>
-                  <a href="https://kimsbengaluru.edu.in/BCom" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">B.Com Advanced</a>
-                  <a href="https://kimsbengaluru.edu.in/BCA.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">BCA</a>
-                  <a href="https://kimsbengaluru.edu.in/BCA.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">BCA Advanced</a>
-                  <a href="https://kimsbengaluru.edu.in/MBA.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">MBA</a>
-                  <a href="https://kimsbengaluru.edu.in/MCA.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">MCA</a>
-                  <a href="https://kgi.edu.in/KIHS/gnm.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">GNM</a>
-                  <a href="https://kgi.edu.in/KIHS/bscNursing.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">B.Sc Nursing</a>
-                  <a href="https://kgi.edu.in/KIHS/pbBsc.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">PBBSc</a>
-                  <a href="https://kgi.edu.in/KIHS/MscNursing.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">M.Sc Nursing</a>
-                  <a href="https://kgi.edu.in/KIHS/BSCren.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">B.Sc Renal Dialysis</a>
-                  <a href="https://kgi.edu.in/KIHS/BSCres.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">B.Sc Respiratory</a>
-                  <a href="https://kgi.edu.in/KIHS/bscOtt.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">B.Sc AT & OT</a>
-                  <a href="https://kgi.edu.in/KIHS/bscMit.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">B.Sc MIT</a>
-                  <a href="https://kgi.edu.in/KIHS/BSCmlt.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">B.Sc MLT</a>
-                  <a href="https://kimsbengaluru.edu.in/bhm" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">Hotel Management</a>
-                  <a href="https://koshysglobalacademia.com/" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">School</a>
-                </div>
-              )}
-            </div>
-
-            {/* Admissions */}
-            <div>
-              <button
-                onClick={() => toggleDropdown('admissions')}
-                className="w-full text-left px-3 py-2 text-sm font-semibold uppercase hover:bg-gray-100 rounded"
-              >
-                Admissions {openDropdowns.includes('admissions') ? '▼' : '▶'}
-              </button>
-              {openDropdowns.includes('admissions') && (
-                <div className="bg-gray-50 pl-4 space-y-1">
-                  <a href="https://apply.kgi.edu.in/" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">Apply Now</a>
-                  <a href="https://kimsbengaluru.edu.in/kimsmail" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">Download Brochure - UG & PG</a>
-                  <a href="https://www.kgi.edu.in/KIHS/kihsmail" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">Download Brochure - Health Sciences</a>
-                </div>
-              )}
-            </div>
-
-            {/* Login */}
-            <div>
-              <button
-                onClick={() => toggleDropdown('login')}
-                className="w-full text-left px-3 py-2 text-sm font-semibold uppercase hover:bg-gray-100 rounded"
-              >
-                Login {openDropdowns.includes('login') ? '▼' : '▶'}
-              </button>
-              {openDropdowns.includes('login') && (
-                <div className="bg-gray-50 pl-4 space-y-1">
-                  <a href="https://kgi.pro910.com/Pro910/Login/login.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">Employee Login</a>
-                  <a href="https://kgi.pro910.com/Pro910/Login/login.php" className="block px-3 py-2 text-xs uppercase hover:bg-gray-100 rounded">Student Login</a>
-                </div>
-              )}
-            </div>
-
-            {/* Contact Button */}
-            <div>
-              <a href="https://kgi.edu.in/ContactKGI.php" className="block">
-                <button className="w-full bg-kgi-red text-white font-semibold py-2 px-4 rounded text-xs uppercase hover:bg-red-800 transition-colors">
-                  Contact Us
-                </button>
-              </a>
-            </div>
+            </a>
           </div>
         </nav>
       )}

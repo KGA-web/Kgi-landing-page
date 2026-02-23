@@ -8,6 +8,7 @@ import healthImg from '/public/Health.png';
 import hotelImg from '/public/Hotel.mgmt.png';
 import researchImg from '/public/research.png';
 
+
 const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyjho59uS7yLSETGdJZoL-Dr1V1BAbW2UeQcOgP8eIOCap37DDMHXe84_UYT-RTVJ1m/exec';
 
 const heroImages = [

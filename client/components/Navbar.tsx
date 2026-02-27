@@ -92,6 +92,7 @@ const navItems = [
   },
 ];
 
+// Recursive mobile accordion item
 function MobileItem({ item, depth = 0 }: { item: any; depth?: number }) {
   const [open, setOpen] = useState(false);
   const hasChildren = item.children?.length > 0;
@@ -128,6 +129,7 @@ function MobileItem({ item, depth = 0 }: { item: any; depth?: number }) {
   );
 }
 
+// Desktop dropdown (recursive)
 function DesktopDropdown({ items, level = 0 }: { items: any[]; level?: number }) {
   return (
     <ul className={`absolute bg-white text-black shadow-xl border border-gray-100 w-56 z-50 ${level === 0 ? 'top-full left-0' : 'top-0 left-full'}`}>
@@ -159,28 +161,28 @@ export default function Header() {
 
   return (
     <header className="bg-kgi-red w-full z-50 sticky top-0 shadow-md">
-      {/* Increased height to md:h-24 to accommodate larger logo */}
+      {/* Container height: h-20 for mobile, md:h-24 for desktop to fit larger logo */}
       <div className="flex items-center justify-between px-4 md:px-[4%] h-20 md:h-24">
 
-        {/* Logo Container */}
-        <a href="https://kgi.edu.in/" className="flex-shrink-0 py-3">
-          {/* Normal Logo - Desktop */}
-          <img 
-            className="hidden md:block" 
-            src="https://www.kgi.edu.in/assets/images/kgi-light-logo.png" 
-            style={{ maxWidth: '250px', height: 'auto', display: 'block' }} 
-            alt="Koshys logo" 
+        {/* Logo Section */}
+        <a href="https://kgi.edu.in/" className="flex-shrink-0 py-2">
+          {/* Desktop Logo */}
+          <img
+            alt="Koshys Group of Institutions"
+            src="https://www.kgi.edu.in/assets/images/kgi-light-logo.png"
+            className="hidden md:block transition-all"
+            style={{ maxWidth: '250px', height: 'auto', display: 'block' }}
           />
-          {/* Mobile Logo */}
-          <img 
-            className="md:hidden" 
-            src="https://kgi.edu.in/assets/images/fav.png" 
-            style={{ maxWidth: '60px', height: 'auto', display: 'block' }} 
-            alt="Koshys logo" 
+          {/* Mobile Favicon Logo */}
+          <img
+            alt="KGI"
+            src="https://kgi.edu.in/assets/images/fav.png"
+            className="md:hidden"
+            style={{ maxWidth: '60px', height: 'auto', display: 'block' }}
           />
         </a>
 
-        {/* Desktop Nav */}
+        {/* Desktop Navigation */}
         <nav className="hidden md:block">
           <ul className="flex items-center">
             {navItems.map((item) => (
@@ -207,7 +209,7 @@ export default function Header() {
           </ul>
         </nav>
 
-        {/* Mobile hamburger */}
+        {/* Mobile Toggle Button */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className="md:hidden text-white p-2 rounded hover:bg-white/10 transition-colors"
@@ -217,7 +219,7 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobile Nav */}
+      {/* Mobile Navigation Drawer */}
       {mobileOpen && (
         <nav className="md:hidden bg-white border-t-2 border-red-800 max-h-[80vh] overflow-y-auto shadow-xl">
           {navItems.map((item) => (

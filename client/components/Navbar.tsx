@@ -160,7 +160,8 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-
+    <header className="relative w-full z-50">
+      <div className="flex items-center justify-between bg-red-800 px-4">
         {/* Desktop Nav */}
         <nav className="hidden md:block">
           <ul className="flex items-center">
@@ -200,7 +201,7 @@ export default function Header() {
 
       {/* Mobile Nav */}
       {mobileOpen && (
-        <nav className="md:hidden bg-white border-t-2 border-red-800 max-h-[80vh] overflow-y-auto shadow-xl">
+        <nav className="md:hidden bg-white border-t-2 border-red-800 max-h-[80vh] overflow-y-auto shadow-xl absolute w-full left-0">
           {navItems.map((item) => (
             <MobileItem key={item.label} item={item} depth={0} />
           ))}

@@ -160,8 +160,23 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="relative w-full z-50">
-      <div className="flex items-center justify-between bg-red-800 px-4">
+    <header className="bg-kgi-red w-full z-50 sticky top-0 shadow-md">
+      <div className="flex items-center justify-between px-4 md:px-[4%] h-16 md:h-auto">
+
+        {/* Logo */}
+        <a href="https://kgi.edu.in/" className="flex-shrink-0 py-3">
+          <img
+            alt="Koshys Group of Institutions"
+            src="https://www.kgi.edu.in/assets/images/kgi-light-logo.png"
+            className="h-10 w-auto hidden md:block"
+          />
+          <img
+            alt="KGI"
+            src="https://kgi.edu.in/assets/images/fav.png"
+            className="h-9 w-auto md:hidden"
+          />
+        </a>
+
         {/* Desktop Nav */}
         <nav className="hidden md:block">
           <ul className="flex items-center">
@@ -201,7 +216,7 @@ export default function Header() {
 
       {/* Mobile Nav */}
       {mobileOpen && (
-        <nav className="md:hidden bg-white border-t-2 border-red-800 max-h-[80vh] overflow-y-auto shadow-xl absolute w-full left-0">
+        <nav className="md:hidden bg-white border-t-2 border-red-800 max-h-[80vh] overflow-y-auto shadow-xl">
           {navItems.map((item) => (
             <MobileItem key={item.label} item={item} depth={0} />
           ))}

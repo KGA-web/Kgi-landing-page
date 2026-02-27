@@ -160,22 +160,6 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="bg-kgi-red w-full z-50 sticky top-0 shadow-md">
-      <div className="flex items-center justify-between px-4 md:px-[4%] h-16 md:h-auto">
-
-        {/* Logo */}
-        <a href="https://kgi.edu.in/" className="flex-shrink-0 py-3">
-          <img
-            alt="Koshys Group of Institutions"
-            src="https://www.kgi.edu.in/assets/images/kgi-light-logo.png"
-            className="h-10 w-auto hidden md:block"
-          />
-          <img
-            alt="KGI"
-            src="https://kgi.edu.in/assets/images/fav.png"
-            className="h-9 w-auto md:hidden"
-          />
-        </a>
 
         {/* Desktop Nav */}
         <nav className="hidden md:block">

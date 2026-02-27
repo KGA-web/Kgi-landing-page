@@ -92,7 +92,6 @@ const navItems = [
   },
 ];
 
-// Recursive mobile accordion item
 function MobileItem({ item, depth = 0 }: { item: any; depth?: number }) {
   const [open, setOpen] = useState(false);
   const hasChildren = item.children?.length > 0;
@@ -129,7 +128,6 @@ function MobileItem({ item, depth = 0 }: { item: any; depth?: number }) {
   );
 }
 
-// Desktop dropdown (recursive)
 function DesktopDropdown({ items, level = 0 }: { items: any[]; level?: number }) {
   return (
     <ul className={`absolute bg-white text-black shadow-xl border border-gray-100 w-56 z-50 ${level === 0 ? 'top-full left-0' : 'top-0 left-full'}`}>
@@ -161,19 +159,24 @@ export default function Header() {
 
   return (
     <header className="bg-kgi-red w-full z-50 sticky top-0 shadow-md">
-      <div className="flex items-center justify-between px-4 md:px-[4%] h-16 md:h-auto">
+      {/* Increased height to md:h-24 to accommodate larger logo */}
+      <div className="flex items-center justify-between px-4 md:px-[4%] h-20 md:h-24">
 
-        {/* Logo */}
+        {/* Logo Container */}
         <a href="https://kgi.edu.in/" className="flex-shrink-0 py-3">
-          <img
-            alt="Koshys Group of Institutions"
-            src="https://www.kgi.edu.in/assets/images/kgi-light-logo.png"
-            className="h-10 w-auto hidden md:block"
+          {/* Normal Logo - Desktop */}
+          <img 
+            className="hidden md:block" 
+            src="https://www.kgi.edu.in/assets/images/kgi-light-logo.png" 
+            style={{ maxWidth: '250px', height: 'auto', display: 'block' }} 
+            alt="Koshys logo" 
           />
-          <img
-            alt="KGI"
-            src="https://kgi.edu.in/assets/images/fav.png"
-            className="h-9 w-auto md:hidden"
+          {/* Mobile Logo */}
+          <img 
+            className="md:hidden" 
+            src="https://kgi.edu.in/assets/images/fav.png" 
+            style={{ maxWidth: '60px', height: 'auto', display: 'block' }} 
+            alt="Koshys logo" 
           />
         </a>
 
@@ -184,7 +187,7 @@ export default function Header() {
               <li key={item.label} className="relative group">
                 <a
                   href="#"
-                  className="text-white text-sm font-semibold uppercase px-4 py-6 flex items-center gap-1 hover:bg-black/15 transition-colors"
+                  className="text-white text-sm font-semibold uppercase px-4 py-10 flex items-center gap-1 hover:bg-black/15 transition-colors"
                 >
                   {item.label}
                   <ChevronDown size={12} className="opacity-70" />
@@ -210,7 +213,7 @@ export default function Header() {
           className="md:hidden text-white p-2 rounded hover:bg-white/10 transition-colors"
           aria-label="Toggle menu"
         >
-          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+          {mobileOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
       </div>
 
